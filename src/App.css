@@ -1,0 +1,116 @@
+body {
+  font-family: 'Inter', sans-serif;
+  background: #f8f9fa;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.App {
+  width: 90%;
+  max-width: 500px;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Tata Letak Form Lebih Rapi */
+.form-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+  width: 100%;
+}
+
+/* Input dan Dropdown lebih premium */
+input, select {
+  width: 90%;
+  padding: 12px;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: all 0.3s ease-in-out;
+}
+
+input:focus, select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Tombol modern */
+button {
+  background: #007bff;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  background: #0056b3;
+  transform: scale(1.02);
+}
+
+/* Responsiveness */
+@media screen and (max-width: 600px) {
+  .App {
+    width: 95%;
+    padding: 20px;
+  }
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  table-layout: auto; /* Biarkan ukuran kolom mengikuti konten */
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  table-layout: auto;
+}
+
+.history-table th {
+  background-color: #007bff;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 12px;
+  text-align: left;
+  white-space: nowrap; /* Pastikan header tidak pecah */
+}
+
+.history-table td {
+  font-size: 10px;
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+  word-wrap: break-word; /* Biarkan teks panjang tetap terlihat dengan baik */
+  max-width: 150px; /* Batasi lebar kolom agar tidak tumpang tindih */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Jika teks terlalu panjang, tampilkan dengan "..." */
+}
+
+.history-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Agar tabel tetap terlihat baik di mobile */
+@media screen and (max-width: 600px) {
+  .history-table th, .history-table td {
+    font-size: 12px;
+    padding: 8px;
+    max-width: 120px; /* Sesuaikan ukuran kolom di layar kecil */
+  }
+}
