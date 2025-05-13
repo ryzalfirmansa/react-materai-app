@@ -1,6 +1,6 @@
 body {
   font-family: 'Inter', sans-serif;
-  background: #f8f9fa;
+  background: #e5ddd5; /* Warna latar belakang WhatsApp */
   margin: 0;
   padding: 0;
   display: flex;
@@ -13,9 +13,9 @@ body {
   width: 90%;
   max-width: 500px;
   background: white;
-  padding: 25px;
+  padding: 15px;
   border-radius: 12px;
-  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
@@ -23,7 +23,7 @@ body {
 .form-container {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 15px;
+  gap: 10px;
   width: 100%;
 }
 
@@ -31,22 +31,22 @@ body {
 input, select {
   width: 90%;
   padding: 12px;
-  border: 2px solid #ccc;
+  border: 3px solid #ccc;
   border-radius: 6px;
   font-size: 16px;
   transition: all 0.3s ease-in-out;
 }
 
 input:focus, select:focus {
-  border-color: #007bff;
+  border-color: #128C7E; /* Warna hijau khas WhatsApp */
   outline: none;
 }
 
-/* Tombol modern */
+/* Tombol mirip WhatsApp */
 button {
-  background: #007bff;
+  background: #25D366; /* Hijau WhatsApp */
   color: white;
-  padding: 12px;
+  padding: 10px;
   border: none;
   border-radius: 6px;
   font-size: 16px;
@@ -55,7 +55,7 @@ button {
 }
 
 button:hover {
-  background: #0056b3;
+  background: #128C7E;
   transform: scale(1.02);
 }
 
@@ -71,46 +71,66 @@ button:hover {
   width: 100%;
   border-collapse: collapse;
   margin-top: 15px;
-  table-layout: auto; /* Biarkan ukuran kolom mengikuti konten */
-}
-
-.history-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-  table-layout: auto;
 }
 
 .history-table th {
-  background-color: #007bff;
+  background-color: #128C7E; /* Warna header hijau WhatsApp */
   color: white;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: bold;
   padding: 12px;
-  text-align: left;
-  white-space: nowrap; /* Pastikan header tidak pecah */
+  text-align: center;
 }
 
 .history-table td {
-  font-size: 10px;
+  font-size: 12px;
   padding: 10px;
   text-align: left;
   border: 1px solid #ddd;
-  word-wrap: break-word; /* Biarkan teks panjang tetap terlihat dengan baik */
-  max-width: 150px; /* Batasi lebar kolom agar tidak tumpang tindih */
+  background: #fff;
+  word-wrap: break-word;
+  max-width: 150px;
   overflow: hidden;
-  text-overflow: ellipsis; /* Jika teks terlalu panjang, tampilkan dengan "..." */
-}
-
-.history-table tr:nth-child(even) {
-  background-color: #f2f2f2;
+  text-overflow: ellipsis;
 }
 
 /* Agar tabel tetap terlihat baik di mobile */
 @media screen and (max-width: 600px) {
   .history-table th, .history-table td {
-    font-size: 12px;
+    font-size: 14px;
     padding: 8px;
-    max-width: 120px; /* Sesuaikan ukuran kolom di layar kecil */
+    max-width: 120px;
   }
+}
+
+/* Tambahkan jarak untuk tombol */
+.view-data-button {
+  margin-top: 20px;
+}
+
+.history-table {
+  margin-bottom: 20px;
+}
+
+.export-button, .back-button {
+  margin-top: 20px;
+  width: 100%;
+}
+
+
+.star-wars-title {
+  font-family: 'Staatliches', sans-serif;
+  font-size: 24px;
+  color: #FFD700; /* Warna emas khas Star Wars */
+  text-transform: uppercase;
+  text-shadow: 2px 2px 5px #000;
+}
+
+.form-container h4,
+.App h2,
+.master-upload-title {
+  font-family: 'Staatliches', sans-serif;
+  font-size: 22px;
+  color: #FFD700;
+  text-shadow: 2px 2px 4px #000;
 }

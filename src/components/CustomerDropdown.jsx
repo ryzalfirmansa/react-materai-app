@@ -1,13 +1,17 @@
 import React from "react";
-import Select from "react-select";
 
-const CustomerDropdown = ({ customers, onSelect }) => {
-  const options = customers.map((name) => ({ value: name, label: name }));
-
+const CustomerDropdown = ({ customers, onSelect, selectedCustomer }) => {
   return (
-    <div>
-      <h4>Pilih Nama Customer</h4>
-      <Select options={options} onChange={(selected) => onSelect(selected.value)} />
+    <div className="dropdown-container">
+      <label>Pilih Nama Customer:</label>
+      <select value={selectedCustomer} onChange={(e) => onSelect(e.target.value)}>
+        <option value="">-- Pilih Customer --</option>
+        {customers.map((customer, index) => (
+          <option key={index} value={customer}>
+            {customer}
+          </option>
+        ))}
+      </select>
     </div>
   );
 };
