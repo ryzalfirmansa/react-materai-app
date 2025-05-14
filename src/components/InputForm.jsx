@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
+import MasterUpload from "./MasterUpload"; // Tambahkan komponen upload
 
-const InputForm = ({ selectedCustomer, currentUser, userRole, onDataSaved }) => {
+const InputForm = ({ selectedCustomer, currentUser, userRole, onDataSaved, onDataLoaded }) => {
   const getNextNumber = () => {
     const users = JSON.parse(localStorage.getItem("users")) || {};
     const userEntries = users[currentUser]?.data || [];
@@ -14,6 +15,8 @@ const InputForm = ({ selectedCustomer, currentUser, userRole, onDataSaved }) => 
     nilaiInvKw: "",
   });
 
+  const [fileUploaded, setFileUploaded] = useState(false); // Cek apakah file sudah diunggah
+
   useEffect(() => {
     setFormData((prevData) => ({
       ...prevData,
@@ -25,81 +28,118 @@ const InputForm = ({ selectedCustomer, currentUser, userRole, onDataSaved }) => 
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSave = () => {
-    if (!currentUser) {
-      alert("Anda harus login terlebih dahulu!");
+  const handleConfirmUpload = () => {
+    const uploadedData = JSON.parse(localStorage.getItem("uploadedData")) || [];
+
+    if (uploadedData.length === 0) {
+      alert("Belum ada file yang diunggah!");
       return;
     }
 
-    const users = JSON.parse(localStorage.getItem("users")) || {};
-    if (!users[currentUser]) users[currentUser] = { password: users[currentUser]?.password || "", data: [] };
-
-    const newEntry = { ...formData, customer: selectedCustomer };
-    users[currentUser].data.push(newEntry);
-    localStorage.setItem("users", JSON.stringify(users));
-
-    if (onDataSaved) {
-      onDataSaved();
-    }
-
-    setFormData({
-      nomor: getNextNumber(),
-      tanggal: new Date().toISOString().slice(0, 10),
-      noInvKw: "",
-      nilaiInvKw: "",
-    });
-
-    alert(`Data berhasil disimpan untuk user: ${currentUser}`);
+    localStorage.setItem("confirmedData", JSON.stringify(uploadedData));
+    setFileUploaded(true); // Tandai bahwa file sudah dikonfirmasi
+    alert("Data dari file yang diunggah telah dikonfirmasi dan disimpan!");
   };
 
-  const handleAddData = () => {
-  if (!selectedCustomer) {
-    alert("Pilih customer terlebih dahulu!");
+const handleSave = () => {
+  if (!currentUser) {
+    alert("Anda harus login terlebih dahulu!");
     return;
   }
 
   const usersData = JSON.parse(localStorage.getItem("userData")) || {};
-
   if (!usersData[currentUser]) usersData[currentUser] = { data: [] };
 
-  const newEntry = {
-    nomor: usersData[currentUser].data.length + 1,
-    tanggal: new Date().toISOString().slice(0, 10),
-    customer: selectedCustomer,
-    noInvKw: "INV999",
-    nilaiInvKw: "500000"
-  };
-
+  const newEntry = { ...formData, customer: selectedCustomer };
   usersData[currentUser].data.push(newEntry);
   localStorage.setItem("userData", JSON.stringify(usersData));
 
-  alert(`Data baru berhasil ditambahkan ke customer ${selectedCustomer}`);
+  if (onDataSaved) {
+    onDataSaved();
+  }
+
+  alert(`Data berhasil disimpan untuk user: ${currentUser}`);
 };
 
 
+  const handleAddData = () => {
+    if (!selectedCustomer) {
+      alert("Pilih customer terlebih dahulu!");
+      return;
+    }
+
+    const usersData = JSON.parse(localStorage.getItem("userData")) || {};
+    if (!usersData[currentUser]) usersData[currentUser] = { data: [] };
+
+    const newEntry = {
+      nomor: usersData[currentUser].data.length + 1,
+      tanggal: new Date().toISOString().slice(0, 10),
+      customer: selectedCustomer,
+      noInvKw: "INV999",
+      nilaiInvKw: "500000",
+    };
+
+    usersData[currentUser].data.push(newEntry);
+    localStorage.setItem("userData", JSON.stringify(usersData));
+
+    alert(`Data baru berhasil ditambahkan ke customer ${selectedCustomer}`);
+  };
+
   const handleDeleteData = () => {
-  if (!selectedCustomer) {
-    alert("Pilih customer terlebih dahulu!");
+    if (!selectedCustomer) {
+      alert("Pilih customer terlebih dahulu!");
+      return;
+    }
+
+    const usersData = JSON.parse(localStorage.getItem("userData")) || {};
+    if (!usersData[currentUser]) return;
+
+    usersData[currentUser].data = usersData[currentUser].data.filter(
+      (entry) => entry.customer !== selectedCustomer
+    );
+
+    localStorage.setItem("userData", JSON.stringify(usersData));
+
+    alert(`Semua data untuk customer ${selectedCustomer} telah dihapus!`);
+  };
+
+
+const handleExportData = () => {
+  // Ambil data dari localStorage
+  const usersData = JSON.parse(localStorage.getItem("userData")) || {};
+  if (!usersData[currentUser] || usersData[currentUser].data.length === 0) {
+    alert("Tidak ada data untuk diekspor!");
     return;
   }
 
-  const usersData = JSON.parse(localStorage.getItem("userData")) || {};
+  // Simpan data dalam format JSON (bisa juga ke file)
+  const exportedData = JSON.stringify(usersData[currentUser].data, null, 2);
+  console.log("Data yang diekspor:", exportedData);
 
-  if (!usersData[currentUser]) return;
-
-  usersData[currentUser].data = usersData[currentUser].data.filter(
-    (entry) => entry.customer !== selectedCustomer
-  );
-
+  // Hapus semua data user setelah ekspor
+  usersData[currentUser].data = [];
   localStorage.setItem("userData", JSON.stringify(usersData));
 
-  alert(`Semua data untuk customer ${selectedCustomer} telah dihapus!`);
+  // Reset nomor otomatis ke 0
+  setFormData((prevData) => ({
+    ...prevData,
+    nomor: 0, // Reset nomor setelah ekspor
+  }));
+
+  alert("Data telah diekspor, semua data telah dihapus, dan nomor otomatis direset!");
 };
+
 
 
   return (
     <div className="form-container">
       <h4 className="star-wars-title">Form Input Data</h4>
+
+      {/* Hanya Admin yang bisa mengunggah data dan mengelola customer */}
+      
+
+      {fileUploaded && <p style={{ color: "green" }}>✅ File telah dikonfirmasi dan disimpan.</p>}
+
       <input type="text" name="nomor" value={formData.nomor} disabled placeholder="Nomor Otomatis" />
       <input type="date" name="tanggal" value={formData.tanggal} onChange={handleChange} />
       <input type="text" name="noInvKw" value={formData.noInvKw} onChange={handleChange} placeholder="No Inv/Kw" />

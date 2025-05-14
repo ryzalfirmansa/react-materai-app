@@ -10,7 +10,7 @@ body {
 }
 
 .App {
-  width: 90%;
+  width: 100%;
   max-width: 500px;
   background: white;
   padding: 15px;
@@ -41,6 +41,70 @@ input:focus, select:focus {
   border-color: #128C7E; /* Warna hijau khas WhatsApp */
   outline: none;
 }
+
+select {
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  max-width: 320px; /* Batasi agar tidak terlalu lebar */
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #00ff2a;
+  border-radius: 5px;
+  background-color: rgb(218, 218, 218);
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Efek saat dropdown difokuskan */
+select:focus {
+  border-color: #29d407;
+  box-shadow: 0 0 8px rgba(0, 255, 76, 0.5);
+}
+
+/* Style untuk opsi */
+option {
+  font-size: 16px;
+  background-color: white;
+  color: #333;
+}
+
+
+.user-name {
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  max-width: 300px;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #007bff;
+  border-radius: 5px;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.user-name:focus {
+  border-color: #0056b3;
+  box-shadow: 0 0 8px rgba(41, 48, 56, 0.5);
+}
+
+.pass-word {
+  width: 100%;
+  margin-bottom: 10px;
+  max-width: 300px;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #007bff;
+  border-radius: 5px;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.pass-word:focus {
+  border-color: #0056b3;
+  box-shadow: 0 0 8px rgba(41, 48, 56, 0.5);
+}
+
 
 /* Tombol mirip WhatsApp */
 button {
@@ -117,6 +181,56 @@ button:hover {
   width: 100%;
 }
 
+.admin-actions {
+  display: flex;
+  margin-top: 20px;
+  flex-direction: column; /* Susun tombol secara vertikal */
+  gap: 10px; /* Beri jarak antar tombol */
+}
+
+
+.logout-button{
+  margin-top: 20px;
+  flex-direction: column; /* Susun tombol secara vertikal */
+  gap: 10px; /* Beri jarak antar tombol */
+}
+
+.login-button{
+  width: 50%;
+  margin-bottom: 30px;
+  flex-direction: column; /* Susun tombol secara vertikal */
+  gap: 10px; /* Beri jarak antar tombol */
+}
+
+.upload-button{
+  margin-bottom: 20px;
+  flex-direction: column; /* Susun tombol secara vertikal */
+  gap: 10px; /* Beri jarak antar tombol */
+}
+
+.user-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.manage-button{
+ margin-top: 20px;
+  flex-direction: column; /* Susun tombol secara vertikal */
+  gap: 10px; /* Beri jarak antar tombol */
+}
+
+.reload-history{
+  padding: 8px;
+}
+
+.dropdown-container{
+  font-family: 'Staatliches', sans-serif;
+  margin-top: 20px;
+  flex-direction: column; /* Susun tombol secara vertikal */
+  gap: 10px; /* Beri jarak antar tombol */
+}
+
 
 .star-wars-title {
   font-family: 'Staatliches', sans-serif;
@@ -127,10 +241,11 @@ button:hover {
 }
 
 .form-container h4,
-.App h2,
+.App h2, 
+.App h3,
 .master-upload-title {
   font-family: 'Staatliches', sans-serif;
-  font-size: 22px;
+  font-size: 25px;
   color: #FFD700;
   text-shadow: 2px 2px 4px #000;
 }
@@ -138,13 +253,6 @@ button:hover {
 .spaced-button {
   margin-top: 20px; /* Beri jarak 20px di atas tombol */
 }
-
-
-
-.login-container{
-margin-top: 20px;
-}
-
 
 .customer-table {
   width: 100%;
@@ -209,3 +317,4 @@ margin-top: 20px;
 .back-button:hover {
   background-color: #218838;
 }
+

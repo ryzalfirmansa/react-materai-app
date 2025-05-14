@@ -27,7 +27,7 @@ const CustomerManagement = ({ customerList, onDeleteCustomer, onDeleteAllCustome
               ))}
             </tbody>
           </table>
-          <button className="delete-all-button" onClick={onDeleteAllCustomers}>Hapus Semua Data</button>
+          <button className="delete-all-button" onClick={() => onDeleteAllCustomers()}>Hapus Semua Data</button>
         </>
       ) : (
         <p>Tidak ada data customer yang tersimpan.</p>

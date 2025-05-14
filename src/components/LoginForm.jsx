@@ -5,34 +5,34 @@ const LoginForm = ({ onLogin }) => {
   const [role, setRole] = useState("user"); // Default sebagai User Biasa
   const [password, setPassword] = useState(""); // Tambahkan input password
 
-  const handleLogin = () => {
-    if (username.trim() === "") {
-      alert("Masukkan username!");
-      return;
-    }
+const handleLogin = () => {
+  if (username.trim() === "") {
+    alert("Masukkan username!");
+    return;
+  }
 
-    // Jika user memilih "Admin", maka password wajib diisi
-    if (role === "admin" && password !== "admin123") {
-      alert("Password salah! Silakan coba lagi.");
-      return;
-    }
+  // Jika user memilih "Admin", maka password wajib diisi
+  if (role === "admin" && password !== "admin123") {
+    alert("Password salah! Silakan coba lagi.");
+    return;
+  }
 
-    localStorage.setItem("currentUser", username);
-    localStorage.setItem("userRole", role); // Simpan peran user
-    onLogin(username, role);
-  };
+  localStorage.setItem("currentUser", username);
+  localStorage.setItem("userRole", role); // Simpan peran user dengan benar
+  onLogin(username, role);
+};
 
   return (
     <div className="login-container">
-      <h2>Masuk sebagai</h2>
+      <h3>Masuk sebagai</h3>
       
       <select value={role} onChange={(e) => setRole(e.target.value)}>
-        <option value="admin">Admin</option>
-        <option value="user">User Biasa</option>
+        <option value="admin">Kasir</option>
+        <option value="user">Collector</option>
         <option value="guest">Guest</option>
       </select>
 
-      <input 
+      <input className="user-name"
         type="text" 
         placeholder="Masukkan Username" 
         value={username} 
@@ -41,7 +41,7 @@ const LoginForm = ({ onLogin }) => {
 
       {/* Tampilkan input password hanya jika user memilih Admin */}
       {role === "admin" && (
-        <input 
+        <input className="pass-word"
           type="password" 
           placeholder="Masukkan Password Admin" 
           value={password} 
@@ -49,7 +49,7 @@ const LoginForm = ({ onLogin }) => {
         />
       )}
 
-      <button className="spaced-button" onClick={handleLogin}>Masuk</button>
+      <button className="login-button" onClick={handleLogin}>Masuk</button>
     </div>
   );
 };
