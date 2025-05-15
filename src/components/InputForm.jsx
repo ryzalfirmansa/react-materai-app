@@ -90,7 +90,7 @@ const handleSave = () => {
 
 
 
-  /*const handleAddData = () => {
+  const handleAddData = () => {
     if (!selectedCustomer) {
       alert("Pilih customer terlebih dahulu!");
       return;
@@ -132,7 +132,7 @@ const handleSave = () => {
   };
 
 
-const handleExportData = () => {
+/*const handleExportData = () => {
   // Ambil data dari localStorage
   const usersData = JSON.parse(localStorage.getItem("userData")) || {};
   if (!usersData[currentUser] || usersData[currentUser].data.length === 0) {
