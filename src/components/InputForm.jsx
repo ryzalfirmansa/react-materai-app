@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import MasterUpload from "./MasterUpload"; // Tambahkan komponen upload
 
-const InputForm = ({ selectedCustomer, currentUser, userRole, onDataSaved, onDataLoaded }) => {
+//const InputForm = ({ selectedCustomer, currentUser, userRole, onDataSaved, onDataLoaded }) => {
+const InputForm = ({ selectedCustomer, setSelectedCustomer, currentUser, userRole, customers, onDataSaved }) => {
+
   const getNextNumber = () => {
     const users = JSON.parse(localStorage.getItem("users")) || {};
     const userEntries = users[currentUser]?.data || [];
@@ -20,8 +22,8 @@ const InputForm = ({ selectedCustomer, currentUser, userRole, onDataSaved, onDat
   useEffect(() => {
     setFormData((prevData) => ({
       ...prevData,
-      nomor: getNextNumber(),
-    }));
+    nomor: JSON.parse(localStorage.getItem("userData"))?.[currentUser]?.data.length + 1 || 1,
+  }));
   }, [currentUser]);
 
   const handleChange = (e) => {
@@ -41,7 +43,7 @@ const InputForm = ({ selectedCustomer, currentUser, userRole, onDataSaved, onDat
     alert("Data dari file yang diunggah telah dikonfirmasi dan disimpan!");
   };
 
-const handleSave = () => {
+/*const handleSave = () => {
   if (!currentUser) {
     alert("Anda harus login terlebih dahulu!");
     return;
@@ -59,10 +61,36 @@ const handleSave = () => {
   }
 
   alert(`Data berhasil disimpan untuk user: ${currentUser}`);
+};*/
+
+const handleSave = () => {
+  if (!currentUser) {
+    alert("Anda harus login terlebih dahulu!");
+    return;
+  }
+
+  const usersData = JSON.parse(localStorage.getItem("userData")) || {};
+  if (!usersData[currentUser]) usersData[currentUser] = { data: [] };
+
+  const newEntry = { ...formData, customer: selectedCustomer };
+  usersData[currentUser].data.push(newEntry);
+  localStorage.setItem("userData", JSON.stringify(usersData));
+
+  setFormData({
+    nomor: usersData[currentUser].data.length + 1, // Nomor bertambah otomatis
+    tanggal: "",
+    noInvKw: "",
+    nilaiInvKw: "",
+  });
+
+  setSelectedCustomer(""); // Reset dropdown customer setelah penyimpanan
+
+  alert("Data berhasil disimpan! Semua input telah direset.");
 };
 
 
-  const handleAddData = () => {
+
+  /*const handleAddData = () => {
     if (!selectedCustomer) {
       alert("Pilih customer terlebih dahulu!");
       return;
@@ -127,8 +155,7 @@ const handleExportData = () => {
   }));
 
   alert("Data telah diekspor, semua data telah dihapus, dan nomor otomatis direset!");
-};
-
+};*/
 
 
   return (
@@ -145,7 +172,7 @@ const handleExportData = () => {
       <input type="text" name="noInvKw" value={formData.noInvKw} onChange={handleChange} placeholder="No Inv/Kw" />
       <input type="number" name="nilaiInvKw" value={formData.nilaiInvKw} onChange={handleChange} placeholder="Nilai Inv/Kw" />
 
-      <button onClick={handleSave}>Simpan Data</button>
+      <button className="save-data" onClick={handleSave}>Simpan Data</button>
     </div>
   );
 };

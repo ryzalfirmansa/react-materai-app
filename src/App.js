@@ -92,6 +92,9 @@ const handleDataSaved = () => {
     alert(`Customer "${customerName}" berhasil ditambahkan!`);
   };
 
+  const [customers, setCustomers] = useState([]); // Pastikan daftar customer ada di App.js
+
+
   return (
     <div className="App">
       {!currentUser ? (
@@ -129,10 +132,13 @@ const handleDataSaved = () => {
           {selectedCustomer && (
             <InputForm
               selectedCustomer={selectedCustomer}
+              setSelectedCustomer={setSelectedCustomer} // Kirim fungsi reset ke InputForm.jsx
               currentUser={currentUser}
               userRole={userRole}
-              onDataSaved={handleDataSaved}
+              customers={customers} // Kirim daftar customer
+              onDataSaved={() => setSelectedCustomer("")} // Reset customer setelah data disimpan
             />
+
           )}
 
           <div className="user-actions">

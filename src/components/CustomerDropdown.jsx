@@ -7,9 +7,7 @@ const CustomerDropdown = ({ customers, onSelect, selectedCustomer }) => {
       <select value={selectedCustomer} onChange={(e) => onSelect(e.target.value)}>
         <option value="">-- Pilih Customer --</option>
         {customers.map((customer, index) => (
-          <option key={index} value={customer}>
-            {customer}
-          </option>
+          <option key={index} value={customer}>{customer}</option>
         ))}
       </select>
     </div>
