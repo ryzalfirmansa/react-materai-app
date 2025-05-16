@@ -61,9 +61,6 @@ const handleUpload = async (fileContent) => {
     if (!sessionStorage.getItem("hasRefreshed")) {
       alert("File templatetest.xlsx berhasil dikonversi ke JSON dan disimpan di Firebase!");
       sessionStorage.setItem("hasRefreshed", "true");
-
-      // Refresh hanya sekali setelah user klik "OK"
-      window.location.reload();
     }
   } catch (error) {
     console.error("Error upload:", error);
