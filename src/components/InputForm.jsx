@@ -17,7 +17,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const InputForm = ({ selectedCustomer, setSelectedCustomer, currentUser }) => {
+const InputForm = ({ selectedCustomer, setSelectedCustomer, currentUser, userRole }) => {
 
   const [formData, setFormData] = useState({
     nomor: 1,
@@ -26,7 +26,7 @@ const InputForm = ({ selectedCustomer, setSelectedCustomer, currentUser }) => {
     nilaiInvKw: "",
   });
 
-  useEffect(() => {
+  /*useEffect(() => {
     const loadUserData = async () => {
       if (!currentUser) return;
 
@@ -45,7 +45,34 @@ const InputForm = ({ selectedCustomer, setSelectedCustomer, currentUser }) => {
     };
 
     loadUserData();
-  }, [currentUser]);
+  }, [currentUser]);*/
+
+  useEffect(() => {
+  const loadUserData = async () => {
+    if (!currentUser) return;
+
+    try {
+      const docRef = doc(db, "users", currentUser);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const userData = Array.isArray(docSnap.data().data) ? docSnap.data().data : [];
+
+        setFormData((prevData) => ({
+          ...prevData,
+          nomor: userData.length + 1,
+        }));
+      } else {
+        console.warn(`Data user ${currentUser} tidak ditemukan, membuat data baru.`);
+        await setDoc(docRef, { username: currentUser, data: [] });
+      }
+    } catch (error) {
+      console.error("Error saat memuat data user:", error);
+    }
+  };
+
+  loadUserData();
+}, [currentUser]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -62,47 +89,29 @@ const handleSave = async () => {
     return;
   }
 
-  const newEntry = { ...formData, customer: selectedCustomer };
+  const newEntry = {
+    ...formData,
+    customer: selectedCustomer,
+    userPenginput: currentUser, // Simpan username yang dimasukkan user saat login
+  };
 
   const docRef = doc(db, "users", currentUser);
   await updateDoc(docRef, {
     data: arrayUnion(newEntry),
   });
 
-  // Reset semua input ke default setelah penyimpanan
   setFormData({
-    nomor: 1, // Reset nomor ke 1
-    tanggal: new Date().toISOString().slice(0, 10), // Reset tanggal ke hari ini
+    nomor: 1,
+    tanggal: new Date().toISOString().slice(0, 10),
     noInvKw: "",
     nilaiInvKw: "",
   });
 
   alert("Data berhasil disimpan ke Firebase!");
-
-  // Reset dropdown customer ke "-- Pilih Customer --"
   setSelectedCustomer("");
 };
 
-
   // Ekspor Data ke File Excel
-  const handleExportExcel = async () => {
-    const docRef = doc(db, "users", currentUser);
-    const docSnap = await getDoc(docRef);
-
-    if (!docSnap.exists()) {
-      alert("Data tidak ditemukan!");
-      return;
-    }
-
-    const userData = docSnap.data().data || [];
-    const worksheet = XLSX.utils.json_to_sheet(userData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Data User");
-
-    XLSX.writeFile(workbook, `Data_${currentUser}.xlsx`);
-    alert("Data berhasil diekspor ke Excel!");
-  };
-
   return (
     <div className="form-container">
       <h4 className="star-wars-title">Form Input Data (User: {currentUser})</h4>

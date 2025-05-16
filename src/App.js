@@ -34,19 +34,36 @@ function App() {
   const [userRole, setUserRole] = useState("guest");
   const [uploading, setUploading] = useState(false);
 
-  useEffect(() => {
-    
+useEffect(() => {
+  const initializeUser = () => {
     const savedUser = localStorage.getItem("currentUser");
-    const savedRole = localStorage.getItem("userRole");
+    const savedRole = localStorage.getItem("userRole") || "guest"; // Pastikan default ke 'guest'
+    
     console.log("Status uploading:", uploading);
 
     if (savedUser) {
       setCurrentUser(savedUser);
-      setUserRole(savedRole || "guest");
+      setUserRole(savedRole);
     }
+  };
 
-    loadCustomerData(); // Ambil data pelanggan dari Firebase saat halaman dimuat
-  }, [uploading]);
+  const fetchCustomerData = async () => {
+    try {
+      await loadCustomerData(); // Ambil data pelanggan dari Firebase
+    } catch (error) {
+      console.error("Error mengambil data pelanggan:", error);
+    }
+  };
+
+  initializeUser();
+  
+  if (!sessionStorage.getItem("hasLoaded")) {
+    sessionStorage.setItem("hasLoaded", "true");
+    fetchCustomerData(); // Hanya jalankan sekali saat halaman dimuat
+  }
+}, []);
+
+  
 
 
   
@@ -168,7 +185,7 @@ const handleDeleteAllCustomers = async () => {
           <h2 className="star-wars-title">Selamat datang, ({userRole.toUpperCase()})</h2>
 
           {userRole === "admin" && <MasterUpload onUpload={handleUpload} onLoad={loadCustomerData} setUploading={setUploading} setCustomerList={setCustomerList} />}
-
+        
 
           {customerList.length > 0 && (
             <CustomerDropdown customers={customerList} onSelect={setSelectedCustomer} selectedCustomer={selectedCustomer} />

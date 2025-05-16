@@ -52,22 +52,23 @@ const handleUploadAndLoadData = async () => {
       const sheetName = workbook.SheetNames[0];
       const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
-      // Simpan data ke Firestore
-      await setDoc(doc(db, "customers", "customerData"), { data: sheetData });
-
-      alert(`File ${fileName} berhasil dikonversi ke JSON dan disimpan !`);
-
-      // Langsung muat data terbaru ke UI tanpa perlu tombol terpisah
+      // Ambil data lama dari Firestore sebelum menyimpan yang baru
       const docRef = doc(db, "customers", "customerData");
       const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        const updatedCustomerList = docSnap.data().data.map(row => row["Nama Customer"]);
-        setCustomerList(updatedCustomerList);
-        localStorage.setItem("customerList", JSON.stringify(updatedCustomerList));
-      } else {
-        alert("Data tidak ditemukan.");
-      }
+      let existingData = docSnap.exists() ? docSnap.data().data || [] : [];
+      let updatedData = [...existingData, ...sheetData]; // Gabungkan data lama dengan data baru
+
+      // Simpan data gabungan ke Firestore
+      await setDoc(docRef, { data: updatedData });
+
+      alert(`File ${fileName} berhasil dikonversi ke JSON dan ditambahkan ke database!`);
+
+      // Langsung muat data terbaru ke UI tanpa perlu tombol terpisah
+      const updatedCustomerList = updatedData.map(row => row["Nama Customer"]);
+      setCustomerList(updatedCustomerList);
+      localStorage.setItem("customerList", JSON.stringify(updatedCustomerList));
+      
     } catch (error) {
       console.error("Error mengunggah dan memuat data:", error);
       alert("Gagal mengunggah dan memuat data.");
@@ -78,6 +79,7 @@ const handleUploadAndLoadData = async () => {
 
   reader.readAsArrayBuffer(selectedFile);
 };
+
 
 
   return (
