@@ -55,6 +55,11 @@ const InputForm = ({ selectedCustomer, setSelectedCustomer, currentUser, userRol
   // Muat daftar customer dari Firestore
   useEffect(() => {
     const loadCustomerList = async () => {
+      const isFirstLoad = sessionStorage.getItem("firstLoad");
+      if (!isFirstLoad) {
+          sessionStorage.setItem("firstLoad", "true");
+          window.location.reload();
+        }
       try {
         const docRef = doc(db, "customers", "customerData");
         const docSnap = await getDoc(docRef);
