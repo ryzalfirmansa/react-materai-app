@@ -76,9 +76,6 @@ const handleUploadAndLoadData = async () => {
       // Pastikan refresh hanya terjadi sekali
       if (!sessionStorage.getItem("hasRefreshed")) {
         sessionStorage.setItem("hasRefreshed", "true");
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500); // Tunggu 1.5 detik sebelum refresh
       }
 
     } catch (error) {
