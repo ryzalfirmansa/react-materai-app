@@ -56,7 +56,7 @@ const handleUpload = async (fileContent) => {
   
   try {
     await setDoc(doc(db, "customers", "customerData"), { data: fileContent });
-    alert("File templatetest.xlsx berhasil dikonversi ke JSON dan disimpan di Firebase!");
+    alert("File excel berhasil dikonversi ke JSON dan disimpan !");
 
     // Refresh halaman setelah user klik "OK"
     window.location.reload();
@@ -87,13 +87,13 @@ const loadCustomerData = async () => {
       setCustomerList(docSnap.data().data.map(row => row["Nama Customer"]));
       localStorage.setItem("customerList", JSON.stringify(docSnap.data().data.map(row => row["Nama Customer"])));
 
-      alert("Data customer berhasil dimuat dari Firebase!");
+      alert("Data customer berhasil dimuat !");
     } else {
       alert("Data tidak ditemukan.");
     }
   } catch (error) {
     console.error("Error mengambil data:", error);
-    alert("Gagal mengambil data dari Firebase.");
+    alert("Gagal mengambil data.");
   } finally {
     setUploading(false); // Sembunyikan progress bar setelah selesai
   }

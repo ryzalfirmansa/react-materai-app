@@ -55,7 +55,7 @@ const handleUploadAndLoadData = async () => {
       // Simpan data ke Firestore
       await setDoc(doc(db, "customers", "customerData"), { data: sheetData });
 
-      alert(`File ${fileName} berhasil dikonversi ke JSON dan disimpan di Firebase!`);
+      alert(`File ${fileName} berhasil dikonversi ke JSON dan disimpan !`);
 
       // Langsung muat data terbaru ke UI tanpa perlu tombol terpisah
       const docRef = doc(db, "customers", "customerData");
@@ -87,7 +87,7 @@ const handleUploadAndLoadData = async () => {
       {fileName && (
         <>
           <p>File Terpilih: {fileName}</p>
-          <button onClick={handleUploadAndLoadData}>Konversi & Simpan ke Firebase</button>
+          <button onClick={handleUploadAndLoadData}>convert to json & save </button>
         </>
       )}
 

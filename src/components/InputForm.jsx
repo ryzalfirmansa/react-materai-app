@@ -112,7 +112,7 @@ const handleSave = async () => {
       <input type="text" name="noInvKw" value={formData.noInvKw} onChange={handleChange} placeholder="No Inv/Kw" />
       <input type="number" name="nilaiInvKw" value={formData.nilaiInvKw} onChange={handleChange} placeholder="Nilai Inv/Kw" />
 
-      <button className="save-data" onClick={handleSave}>Simpan ke Firebase</button>
+      <button className="save-data" onClick={handleSave}>Simpan ke Database</button>
     </div>
   );
 };
