@@ -19,12 +19,11 @@ body {
   text-align: center;
 }
 
-/* Tata Letak Form Lebih Rapi */
+/* Grid untuk layout lebih fleksibel */
 .form-container {
-  margin-top: 10px;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 5px;
+  gap: 8px;
   width: 100%;
 }
 
@@ -144,6 +143,43 @@ button:hover {
     padding: 20px;
   }
 }
+
+/* Untuk tampilan HP dengan layar kecil (max-width: 480px) */
+@media screen and (max-width: 480px) {
+  .App {
+    width: 100%;
+    max-width: 360px; /* Sesuaikan agar tidak terlalu lebar */
+    padding: 12px;
+  }
+
+  .form-container {
+    grid-template-columns: 1fr; /* Tetap satu kolom agar nyaman dibaca */
+  }
+
+  input, select {
+    width: 100%; /* Pastikan input dan dropdown memenuhi layar kecil */
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .dropdown-menu {
+    max-height: 150px; /* Batasi tinggi dropdown agar tidak terlalu panjang */
+    font-size: 14px;
+  }
+
+  button {
+    width: 100%; /* Pastikan tombol memenuhi layar agar mudah diklik */
+    font-size: 14px;
+    padding: 12px;
+  }
+
+  .history-table th, .history-table td {
+    font-size: 12px;
+    padding: 8px;
+    word-wrap: break-word;
+  }
+}
+
 
 .history-button{
   width: 100%;
@@ -371,23 +407,4 @@ button:hover {
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
-}
-
-
-:root {
-  --whatsapp-green: #25D366;
-  --whatsapp-dark: #128C7E;
-  --starwars-gold: #FFD700;
-}
-.star-wars-title {
-  color: var(--starwars-gold);
-}
-button {
-  background: var(--whatsapp-green);
-}
-
-
-.history-table tbody tr:hover {
-  background-color: rgba(0, 123, 255, 0.1);
-  transition: background 0.3s ease-in-out;
 }

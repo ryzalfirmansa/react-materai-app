@@ -76,6 +76,13 @@ option[value=""] {
   color: #888;
 }
 
+label {
+  font-size: large;
+  font-family: "Montserrat", "Nunito", sans-serif;
+  display: block; /* Pastikan label berada di baris tersendiri */
+  margin-bottom: 12px; /* Tambahkan jarak agar tidak terlalu dekat dengan dropdown */
+  font-weight: bold;
+}
 
 .user-name {
   width: 100%;
@@ -211,6 +218,7 @@ button:hover {
 
 .save-data{
   width: 100%;
+  padding: 10px;
   margin-top: 10px;
   gap: 10px; /* Beri jarak antar tombol */
 }
@@ -262,9 +270,10 @@ button:hover {
 
 .App h2, 
 .App h3,
+.App h4,
 .master-upload-title {
-  font-family: 'Staatliches', sans-serif;
-  font-size: 25px;
+  font-family: "Inter", "Poppins", sans-serif;
+  font-size: 20px;
   color: #FFD700;
   text-shadow: 2px 2px 4px #000;
 }
@@ -363,3 +372,4 @@ button:hover {
   border-radius: 4px;
   font-size: 16px;
 }
+
