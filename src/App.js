@@ -56,9 +56,15 @@ const handleUpload = async (fileContent) => {
   
   try {
     await setDoc(doc(db, "customers", "customerData"), { data: fileContent });
-    alert("File templatetest.xlsx berhasil dikonversi ke JSON dan disimpan di Firebase!");
 
-    // Refresh halaman setelah user klik "OK"
+    // Cek apakah halaman sudah direfresh sebelumnya
+    if (!sessionStorage.getItem("hasRefreshed")) {
+      alert("File templatetest.xlsx berhasil dikonversi ke JSON dan disimpan di Firebase!");
+      sessionStorage.setItem("hasRefreshed", "true");
+
+      // Refresh hanya sekali setelah user klik "OK"
+      window.location.reload();
+    }
   } catch (error) {
     console.error("Error upload:", error);
     alert("Gagal mengunggah data.");

@@ -26,26 +26,34 @@ const InputForm = ({ selectedCustomer, setSelectedCustomer, currentUser }) => {
     nilaiInvKw: "",
   });
 
-  useEffect(() => {
-    const loadUserData = async () => {
+useEffect(() => {
+  const loadUserData = async () => {
+    try {
       if (!currentUser) return;
 
       const docRef = doc(db, "users", currentUser);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        const userData = docSnap.data().data || [];
+        const userData = Array.isArray(docSnap.data().data) ? docSnap.data().data : [];
+
+        // Pastikan userData adalah array sebelum digunakan
         setFormData((prevData) => ({
           ...prevData,
           nomor: userData.length + 1,
         }));
       } else {
+        console.warn(`Data user ${currentUser} tidak ditemukan, membuat data baru.`);
         await setDoc(docRef, { username: currentUser, data: [] });
       }
-    };
+    } catch (error) {
+      console.error("Error saat memuat data user:", error);
+    }
+  };
 
-    loadUserData();
-  }, [currentUser]);
+  loadUserData();
+}, [currentUser]); // Memastikan useEffect hanya berjalan saat currentUser berubah
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
