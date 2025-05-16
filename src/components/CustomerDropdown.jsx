@@ -1,9 +1,13 @@
-import React, { useState } from "react";
-import "./CustomerDropdown.css"; // Tambahkan CSS untuk tampilan dropdown
+import React, { useEffect, useState } from "react";
 
-const CustomerDropdown = ({ customers, onSelect }) => {
+const CustomerDropdown = ({ customers, onSelect, selectedCustomer }) => {
   const [searchTerm, setSearchTerm] = useState(""); // State untuk pencarian
-  const [dropdownOpen, setDropdownOpen] = useState(false); // State untuk status dropdown terbuka
+
+  useEffect(() => {
+    if (!selectedCustomer) {
+      onSelect(""); // Set kembali ke "-- Pilih Customer --"
+    }
+  }, [selectedCustomer, onSelect]);
 
   // Filter daftar customer berdasarkan input pencarian
   const filteredCustomers = customers.filter(customer =>
@@ -14,37 +18,22 @@ const CustomerDropdown = ({ customers, onSelect }) => {
     <div className="dropdown-container">
       <label>Pilih Nama Customer:</label>
       
-      {/* Tombol untuk membuka dropdown */}
-      <div className="dropdown-button" onClick={() => setDropdownOpen(!dropdownOpen)}>
-        {searchTerm || "-- Pilih Customer --"}
-      </div>
+      {/* Input untuk pencarian di atas dropdown */}
+      <input 
+        type="text"
+        placeholder="Cari Nama Customer..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="search-input"
+      />
 
-      {/* Dropdown Menu */}
-      {dropdownOpen && (
-        <div className="dropdown-menu">
-          {/* Input Pencarian di dalam dropdown */}
-          <input 
-            type="text"
-            placeholder="Cari Nama Customer..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-          />
-
-          {/* Daftar hasil pencarian */}
-          <ul>
-            {filteredCustomers.map((customer, index) => (
-              <li key={index} onClick={() => { 
-                onSelect(customer); 
-                setSearchTerm(customer); 
-                setDropdownOpen(false); // Tutup dropdown setelah dipilih
-              }}>
-                {customer}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {/* Dropdown dengan hasil pencarian */}
+      <select value={selectedCustomer} onChange={(e) => onSelect(e.target.value)}>
+        <option value="">-- Pilih Customer --</option>
+        {filteredCustomers.map((customer, index) => (
+          <option key={index} value={customer}>{customer}</option>
+        ))}
+      </select>
     </div>
   );
 };

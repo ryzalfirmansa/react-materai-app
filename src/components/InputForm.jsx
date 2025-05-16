@@ -25,6 +25,7 @@ const InputForm = ({ selectedCustomer, setSelectedCustomer, currentUser, userRol
   });
 
   const [customerList, setCustomerList] = useState([]);
+  const [resetDropdown, setResetDropdown] = useState(false);
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -83,38 +84,40 @@ const InputForm = ({ selectedCustomer, setSelectedCustomer, currentUser, userRol
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSave = async () => {
-    if (!currentUser) {
-      alert("Anda harus login terlebih dahulu!");
-      return;
-    }
+const handleSave = async () => {
+  if (!currentUser) {
+    alert("Anda harus login terlebih dahulu!");
+    return;
+  }
 
-    if (!selectedCustomer) {
-      alert("Pilih customer terlebih dahulu!");
-      return;
-    }
+  if (!selectedCustomer) {
+    alert("Pilih customer terlebih dahulu!");
+    return;
+  }
 
-    const newEntry = {
-      ...formData,
-      customer: selectedCustomer,
-      userPenginput: currentUser, // Simpan username yang dimasukkan user saat login
-    };
-
-    const docRef = doc(db, "users", currentUser);
-    await updateDoc(docRef, {
-      data: arrayUnion(newEntry),
-    });
-
-    setFormData({
-      nomor: 1,
-      tanggal: new Date().toISOString().slice(0, 10),
-      noInvKw: "",
-      nilaiInvKw: "",
-    });
-
-    alert("Data berhasil disimpan ke Firebase!");
-    setSelectedCustomer("");
+  const newEntry = {
+    ...formData,
+    customer: selectedCustomer,
+    userPenginput: currentUser, // Simpan username yang dimasukkan user saat login
   };
+
+  const docRef = doc(db, "users", currentUser);
+  await updateDoc(docRef, {
+    data: arrayUnion(newEntry),
+  });
+
+  setFormData({
+    nomor: 1,
+    tanggal: new Date().toISOString().slice(0, 10),
+    noInvKw: "",
+    nilaiInvKw: "",
+  });
+
+  alert("Data berhasil disimpan ke Firebase!");
+
+  setSelectedCustomer(""); // Reset dropdown ke "-- Pilih Customer --"
+  setResetDropdown(prev => !prev); // Trigger perubahan untuk reset dropdown
+};
 
   return (
     <div className="form-container">
