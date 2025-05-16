@@ -1,95 +1,81 @@
 import React, { useEffect, useState } from "react";
-import ExcelJS from "exceljs";
+import * as XLSX from "xlsx";
+import { initializeApp } from "firebase/app";
+import { getFirestore, doc, getDoc, updateDoc, setDoc, arrayUnion } from "firebase/firestore";
 
-const HistoryPage = ({ currentUser, onBack }) => {
+// Konfigurasi Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyCgkP84T1GqeMBlcnn-f_H1OkF94rUhdZM",
+  authDomain: "react-materai.firebaseapp.com",
+  projectId: "react-materai",
+  storageBucket: "react-materai.firebasestorage.app",
+  messagingSenderId: "50155200415",
+  appId: "1:50155200415:web:868941f54de7feb3f1e7aa",
+  measurementId: "G-M6DESRJWPG"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const HistoryPage = ({ currentUser, userRole, onBack }) => {
   const [historyData, setHistoryData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(""); // Tambahkan state untuk pencarian
 
-    /*useEffect(() => {
-    if (!currentUser) return;
+  useEffect(() => {
+    const loadHistory = async () => {
+      if (!currentUser) return;
 
-    const usersData = JSON.parse(localStorage.getItem("userData")) || {};
-    const userRole = localStorage.getItem("userRole");
+      if (userRole === "admin") {
+        const adminRef = doc(db, "admin", "data");
+        const adminSnap = await getDoc(adminRef);
 
-    // Semua user termasuk Guest bisa melihat histori mereka sendiri
-    setHistoryData(usersData[currentUser]?.data || []);
-    }, [currentUser]);*/
+        if (adminSnap.exists()) {
+          setHistoryData(adminSnap.data().data || []);
+        } else {
+          setHistoryData([]);
+        }
+      } else {
+        const docRef = doc(db, "users", currentUser);
+        const docSnap = await getDoc(docRef);
 
+        if (docSnap.exists()) {
+          setHistoryData(docSnap.data().data || []);
+        } else {
+          setHistoryData([]);
+        }
+      }
+    };
 
-    useEffect(() => {
-        handleLoadHistory();
-    if (!currentUser) return;
+    loadHistory();
+  }, [currentUser, userRole]);
 
-    const usersData = JSON.parse(localStorage.getItem("userData")) || {};
-    const userRole = localStorage.getItem("userRole");
+  const formatAngka = (angka) => {
+    return Number(angka).toLocaleString("id-ID");
+  };
 
-    if (userRole === "admin") {
-        setHistoryData(Object.values(usersData).flatMap(user => user.data)); // Admin melihat semua histori
-    } else {
-        setHistoryData(usersData[currentUser]?.data || []); // User & Guest hanya melihat histori mereka sendiri
-    }
-}, [currentUser, localStorage.getItem("userData")]); // Tambahkan dependensi agar histori diperbarui jika data berubah
-
-
-
-const handleExport = async () => {
-  if (historyData.length === 0) {
-    alert("Tidak ada data untuk diekspor!");
-    return;
-  }
-
-  const workbook = new ExcelJS.Workbook();
-  const worksheet = workbook.addWorksheet(`Data - ${currentUser}`);
-
-  // Menambahkan informasi user di bagian atas file Excel
-  const exportDate = new Date().toLocaleString();
-  worksheet.addRow([`Histori Data untuk User: ${currentUser}`]);
-  worksheet.addRow([`Tanggal Export: ${exportDate}`]);
-  worksheet.addRow([]);
-
-  // Tambahkan header kolom
-  worksheet.addRow(["Nomor", "Tanggal", "Nama Customer", "No Inv/Kw", "Nilai Inv/Kw"]);
-
-  // Masukkan data user
-  historyData.forEach((data, index) => {
-    worksheet.addRow([index + 1, data.tanggal, data.customer, data.noInvKw, data.nilaiInvKw]);
-  });
-
-  const buffer = await workbook.xlsx.writeBuffer();
-  const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = `materai_data_${currentUser}.xlsx`;
-  link.click();
-
-  // Hapus data setelah ekspor
-  const usersData = JSON.parse(localStorage.getItem("userData")) || {};
-  usersData[currentUser].data = []; // Kosongkan histori untuk user saat ini
-  localStorage.setItem("userData", JSON.stringify(usersData));
-
-  setHistoryData([]); // Update UI agar halaman histori kosong
-
-  alert(`Data berhasil diekspor dan semua histori telah dihapus untuk ${currentUser}`);
-};
-
-const handleLoadHistory = () => {
-  const currentUser = localStorage.getItem("currentUser");
-  const userRole = localStorage.getItem("userRole");
-
-  const savedData = JSON.parse(localStorage.getItem("userData")) || {};
-
-  if (userRole === "admin") {
-    setHistoryData(Object.values(savedData).flatMap(user => user.data)); // Admin melihat semua histori
-  } else {
-    setHistoryData(savedData[currentUser]?.data || []); // User dan Guest melihat histori mereka sendiri
-  }
-};
+  // Fungsi untuk menyaring data berdasarkan pencarian user
+const filteredData = historyData.filter(row => 
+  Object.values(row).some(value => 
+    value.toString().toLowerCase().includes(searchQuery.toLowerCase())
+  )
+);
 
 
   return (
     <div className="history-container">
       <h2>Histori Data untuk {currentUser}</h2>
-      {historyData.length > 0 ? (
+
+      {/* Input pencarian */}
+<input
+  type="text"
+  placeholder="Cari data dalam histori..."
+  value={searchQuery}
+  onChange={(e) => setSearchQuery(e.target.value)}
+  className="search-input"
+/>
+
+
+      {filteredData.length > 0 ? (
         <>
           <table className="history-table">
             <thead>
@@ -101,24 +87,25 @@ const handleLoadHistory = () => {
                 <th>Nilai Inv/Kw</th>
               </tr>
             </thead>
-            <tbody>
-              {historyData.map((data, index) => (
-                <tr key={index}>
-                  <td>{data.nomor}</td>
-                  <td>{data.tanggal}</td>
-                  <td>{data.customer}</td>
-                  <td>{data.noInvKw}</td>
-                  <td>{data.nilaiInvKw}</td>
-                </tr>
-              ))}
-            </tbody>
+<tbody>
+  {filteredData.map((data, index) => (
+    <tr key={index}>
+      <td>{data.nomor}</td>
+      <td>{data.tanggal}</td>
+      <td>{data.customer}</td>
+      <td>{data.noInvKw}</td>
+      <td>{formatAngka(data.nilaiInvKw)}</td>
+    </tr>
+  ))}
+</tbody>
+
           </table>
-          <button className="reload-history" onClick={handleLoadHistory}>Muat Ulang Histori</button>
-          <button className="export-button" onClick={handleExport}>Export ke Excel</button>
+          <button className="export-button">Export ke Excel</button>
         </>
       ) : (
-        <p>Tidak ada data histori.</p>
+        <p>Tidak ada data histori yang sesuai dengan pencarian.</p>
       )}
+
       <button className="back-button" onClick={onBack}>Kembali</button>
     </div>
   );

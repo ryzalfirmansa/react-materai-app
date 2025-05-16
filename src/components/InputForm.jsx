@@ -1,178 +1,118 @@
 import React, { useState, useEffect } from "react";
-import MasterUpload from "./MasterUpload"; // Tambahkan komponen upload
+import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import * as XLSX from "xlsx";
+import { initializeApp } from "firebase/app";
 
-//const InputForm = ({ selectedCustomer, currentUser, userRole, onDataSaved, onDataLoaded }) => {
-const InputForm = ({ selectedCustomer, setSelectedCustomer, currentUser, userRole, customers, onDataSaved }) => {
+// Konfigurasi Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyCgkP84T1GqeMBlcnn-f_H1OkF94rUhdZM",
+  authDomain: "react-materai.firebaseapp.com",
+  projectId: "react-materai",
+  storageBucket: "react-materai.firebasestorage.app",
+  messagingSenderId: "50155200415",
+  appId: "1:50155200415:web:868941f54de7feb3f1e7aa",
+  measurementId: "G-M6DESRJWPG"
+};
 
-  const getNextNumber = () => {
-    const users = JSON.parse(localStorage.getItem("users")) || {};
-    const userEntries = users[currentUser]?.data || [];
-    return userEntries.length + 1;
-  };
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const InputForm = ({ selectedCustomer, setSelectedCustomer, currentUser }) => {
 
   const [formData, setFormData] = useState({
-    nomor: getNextNumber(),
+    nomor: 1,
     tanggal: new Date().toISOString().slice(0, 10),
     noInvKw: "",
     nilaiInvKw: "",
   });
 
-  const [fileUploaded, setFileUploaded] = useState(false); // Cek apakah file sudah diunggah
-
   useEffect(() => {
-    setFormData((prevData) => ({
-      ...prevData,
-    nomor: JSON.parse(localStorage.getItem("userData"))?.[currentUser]?.data.length + 1 || 1,
-  }));
+    const loadUserData = async () => {
+      if (!currentUser) return;
+
+      const docRef = doc(db, "users", currentUser);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const userData = docSnap.data().data || [];
+        setFormData((prevData) => ({
+          ...prevData,
+          nomor: userData.length + 1,
+        }));
+      } else {
+        await setDoc(docRef, { username: currentUser, data: [] });
+      }
+    };
+
+    loadUserData();
   }, [currentUser]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleConfirmUpload = () => {
-    const uploadedData = JSON.parse(localStorage.getItem("uploadedData")) || [];
-
-    if (uploadedData.length === 0) {
-      alert("Belum ada file yang diunggah!");
-      return;
-    }
-
-    localStorage.setItem("confirmedData", JSON.stringify(uploadedData));
-    setFileUploaded(true); // Tandai bahwa file sudah dikonfirmasi
-    alert("Data dari file yang diunggah telah dikonfirmasi dan disimpan!");
-  };
-
-/*const handleSave = () => {
+const handleSave = async () => {
   if (!currentUser) {
     alert("Anda harus login terlebih dahulu!");
     return;
   }
 
-  const usersData = JSON.parse(localStorage.getItem("userData")) || {};
-  if (!usersData[currentUser]) usersData[currentUser] = { data: [] };
-
-  const newEntry = { ...formData, customer: selectedCustomer };
-  usersData[currentUser].data.push(newEntry);
-  localStorage.setItem("userData", JSON.stringify(usersData));
-
-  if (onDataSaved) {
-    onDataSaved();
-  }
-
-  alert(`Data berhasil disimpan untuk user: ${currentUser}`);
-};*/
-
-const handleSave = () => {
-  if (!currentUser) {
-    alert("Anda harus login terlebih dahulu!");
+  if (!selectedCustomer) {
+    alert("Pilih customer terlebih dahulu!");
     return;
   }
 
-  const usersData = JSON.parse(localStorage.getItem("userData")) || {};
-  if (!usersData[currentUser]) usersData[currentUser] = { data: [] };
-
   const newEntry = { ...formData, customer: selectedCustomer };
-  usersData[currentUser].data.push(newEntry);
-  localStorage.setItem("userData", JSON.stringify(usersData));
 
+  const docRef = doc(db, "users", currentUser);
+  await updateDoc(docRef, {
+    data: arrayUnion(newEntry),
+  });
+
+  // Reset semua input ke default setelah penyimpanan
   setFormData({
-    nomor: usersData[currentUser].data.length + 1, // Nomor bertambah otomatis
-    tanggal: "",
+    nomor: 1, // Reset nomor ke 1
+    tanggal: new Date().toISOString().slice(0, 10), // Reset tanggal ke hari ini
     noInvKw: "",
     nilaiInvKw: "",
   });
 
-  setSelectedCustomer(""); // Reset dropdown customer setelah penyimpanan
+  alert("Data berhasil disimpan ke Firebase!");
 
-  alert("Data berhasil disimpan! Semua input telah direset.");
+  // Reset dropdown customer ke "-- Pilih Customer --"
+  setSelectedCustomer("");
 };
 
 
+  // Ekspor Data ke File Excel
+  const handleExportExcel = async () => {
+    const docRef = doc(db, "users", currentUser);
+    const docSnap = await getDoc(docRef);
 
-  const handleAddData = () => {
-    if (!selectedCustomer) {
-      alert("Pilih customer terlebih dahulu!");
+    if (!docSnap.exists()) {
+      alert("Data tidak ditemukan!");
       return;
     }
 
-    const usersData = JSON.parse(localStorage.getItem("userData")) || {};
-    if (!usersData[currentUser]) usersData[currentUser] = { data: [] };
+    const userData = docSnap.data().data || [];
+    const worksheet = XLSX.utils.json_to_sheet(userData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Data User");
 
-    const newEntry = {
-      nomor: usersData[currentUser].data.length + 1,
-      tanggal: new Date().toISOString().slice(0, 10),
-      customer: selectedCustomer,
-      noInvKw: "INV999",
-      nilaiInvKw: "500000",
-    };
-
-    usersData[currentUser].data.push(newEntry);
-    localStorage.setItem("userData", JSON.stringify(usersData));
-
-    alert(`Data baru berhasil ditambahkan ke customer ${selectedCustomer}`);
+    XLSX.writeFile(workbook, `Data_${currentUser}.xlsx`);
+    alert("Data berhasil diekspor ke Excel!");
   };
-
-  const handleDeleteData = () => {
-    if (!selectedCustomer) {
-      alert("Pilih customer terlebih dahulu!");
-      return;
-    }
-
-    const usersData = JSON.parse(localStorage.getItem("userData")) || {};
-    if (!usersData[currentUser]) return;
-
-    usersData[currentUser].data = usersData[currentUser].data.filter(
-      (entry) => entry.customer !== selectedCustomer
-    );
-
-    localStorage.setItem("userData", JSON.stringify(usersData));
-
-    alert(`Semua data untuk customer ${selectedCustomer} telah dihapus!`);
-  };
-
-
-/*const handleExportData = () => {
-  // Ambil data dari localStorage
-  const usersData = JSON.parse(localStorage.getItem("userData")) || {};
-  if (!usersData[currentUser] || usersData[currentUser].data.length === 0) {
-    alert("Tidak ada data untuk diekspor!");
-    return;
-  }
-
-  // Simpan data dalam format JSON (bisa juga ke file)
-  const exportedData = JSON.stringify(usersData[currentUser].data, null, 2);
-  console.log("Data yang diekspor:", exportedData);
-
-  // Hapus semua data user setelah ekspor
-  usersData[currentUser].data = [];
-  localStorage.setItem("userData", JSON.stringify(usersData));
-
-  // Reset nomor otomatis ke 0
-  setFormData((prevData) => ({
-    ...prevData,
-    nomor: 0, // Reset nomor setelah ekspor
-  }));
-
-  alert("Data telah diekspor, semua data telah dihapus, dan nomor otomatis direset!");
-};*/
-
 
   return (
     <div className="form-container">
-      <h4 className="star-wars-title">Form Input Data</h4>
-
-      {/* Hanya Admin yang bisa mengunggah data dan mengelola customer */}
-      
-
-      {fileUploaded && <p style={{ color: "green" }}>✅ File telah dikonfirmasi dan disimpan.</p>}
+      <h4 className="star-wars-title">Form Input Data (User: {currentUser})</h4>
 
       <input type="text" name="nomor" value={formData.nomor} disabled placeholder="Nomor Otomatis" />
       <input type="date" name="tanggal" value={formData.tanggal} onChange={handleChange} />
       <input type="text" name="noInvKw" value={formData.noInvKw} onChange={handleChange} placeholder="No Inv/Kw" />
       <input type="number" name="nilaiInvKw" value={formData.nilaiInvKw} onChange={handleChange} placeholder="Nilai Inv/Kw" />
 
-      <button className="save-data" onClick={handleSave}>Simpan Data</button>
+      <button className="save-data" onClick={handleSave}>Simpan ke Firebase</button>
     </div>
   );
 };

@@ -6,13 +6,14 @@
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^13.5.0",
+    "@testing-library/user-event": "^14.6.1",
     "exceljs": "^4.4.0",
+    "firebase": "^11.7.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-scripts": "^5.0.1",
     "react-select": "^5.10.1",
-    "web-vitals": "^2.1.4",
+    "web-vitals": "^5.0.1",
     "xlsx": "^0.18.5"
   },
   "scripts": {
@@ -38,5 +39,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.6.0",
+    "source-map-loader": "^5.0.0"
   }
 }

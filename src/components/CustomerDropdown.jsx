@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 const CustomerDropdown = ({ customers, onSelect, selectedCustomer }) => {
+  // Reset dropdown setelah penyimpanan
+  useEffect(() => {
+    if (!selectedCustomer) {
+      onSelect(""); // Set kembali ke "-- Pilih Customer --"
+    }
+  }, [selectedCustomer, onSelect]);
+
   return (
     <div className="dropdown-container">
       <label>Pilih Nama Customer:</label>

@@ -1,7 +1,25 @@
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
 
-const MasterUpload = ({ onDataLoaded }) => {
+
+// Konfigurasi Firebase dari `firebaseConfig`
+const firebaseConfig = {
+  apiKey: "AIzaSyCgkP84T1GqeMBlcnn-f_H1OkF94rUhdZM",
+  authDomain: "react-materai.firebaseapp.com",
+  projectId: "react-materai",
+  storageBucket: "react-materai.firebasestorage.app",
+  messagingSenderId: "50155200415",
+  appId: "1:50155200415:web:868941f54de7feb3f1e7aa",
+  measurementId: "G-M6DESRJWPG"
+};
+
+// Inisialisasi Firebase dan Firestore
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const MasterUpload = ({ setUploading, setCustomerList }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileName, setFileName] = useState("");
 
@@ -18,40 +36,61 @@ const MasterUpload = ({ onDataLoaded }) => {
     setFileName(file.name);
   };
 
-  const handleUpload = () => {
-    if (!selectedFile) {
-      alert("Pilih file terlebih dahulu sebelum mengunggah!");
-      return;
-    }
+const handleUploadAndLoadData = async () => {
+  if (!selectedFile) {
+    alert("Pilih file terlebih dahulu sebelum mengunggah!");
+    return;
+  }
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
+  setUploading(true); // Tampilkan progress bar
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try {
       const data = new Uint8Array(e.target.result);
       const workbook = XLSX.read(data, { type: "array" });
-      const sheetName = workbook.SheetNames[0]; // Ambil sheet pertama
+      const sheetName = workbook.SheetNames[0];
       const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
-      localStorage.setItem("uploadedData", JSON.stringify(sheetData));
-      alert(`File ${fileName} berhasil diunggah dan disimpan!`);
+      // Simpan data ke Firestore
+      await setDoc(doc(db, "customers", "customerData"), { data: sheetData });
 
-      if (onDataLoaded) {
-        onDataLoaded(sheetData);
+      alert(`File ${fileName} berhasil dikonversi ke JSON dan disimpan di Firebase!`);
+
+      // Langsung muat data terbaru ke UI tanpa perlu tombol terpisah
+      const docRef = doc(db, "customers", "customerData");
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const updatedCustomerList = docSnap.data().data.map(row => row["Nama Customer"]);
+        setCustomerList(updatedCustomerList);
+        localStorage.setItem("customerList", JSON.stringify(updatedCustomerList));
+      } else {
+        alert("Data tidak ditemukan.");
       }
-    };
-
-    reader.readAsArrayBuffer(selectedFile);
+    } catch (error) {
+      console.error("Error mengunggah dan memuat data:", error);
+      alert("Gagal mengunggah dan memuat data.");
+    } finally {
+      setUploading(false); // Sembunyikan progress bar setelah selesai
+    }
   };
+
+  reader.readAsArrayBuffer(selectedFile);
+};
+
 
   return (
     <div>
-      <h3>Upload File Master</h3>
+      <h3>Upload Template XLSX</h3>
       <input type="file" accept=".xlsx" onChange={handleFileUpload} />
       {fileName && (
         <>
           <p>File Terpilih: {fileName}</p>
-          <button className="upload-button" onClick={handleUpload}>Upload File</button>
+          <button onClick={handleUploadAndLoadData}>Konversi & Simpan ke Firebase</button>
         </>
       )}
+
     </div>
   );
 };
