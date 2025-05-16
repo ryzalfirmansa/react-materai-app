@@ -56,10 +56,10 @@ const handleUploadAndLoadData = async () => {
       await setDoc(doc(db, "customers", "customerData"), { data: sheetData });
 
       // Cek apakah alert sudah muncul sebelumnya di sesi ini
-      if (!sessionStorage.getItem("hasAlerted")) {
-        alert(`File ${fileName} berhasil dikonversi ke JSON dan disimpan di Firebase!`);
-        sessionStorage.setItem("hasAlerted", "true");
-      }
+      //if (!sessionStorage.getItem("hasAlerted")) {
+        //alert(`File ${fileName} berhasil dikonversi ke JSON dan disimpan di Firebase!`);
+        //sessionStorage.setItem("hasAlerted", "true");
+      //}
 
       // Ambil data terbaru dari Firebase
       const docRef = doc(db, "customers", "customerData");
@@ -74,9 +74,9 @@ const handleUploadAndLoadData = async () => {
       }
 
       // Pastikan refresh hanya terjadi sekali
-      if (!sessionStorage.getItem("hasRefreshed")) {
-        sessionStorage.setItem("hasRefreshed", "true");
-      }
+      //if (!sessionStorage.getItem("hasRefreshed")) {
+       // sessionStorage.setItem("hasRefreshed", "true");
+      //}
 
     } catch (error) {
       console.error("Error mengunggah dan memuat data:", error);
