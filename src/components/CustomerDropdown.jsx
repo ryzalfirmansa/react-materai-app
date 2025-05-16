@@ -3,13 +3,13 @@ import React, { useEffect, useState } from "react";
 const CustomerDropdown = ({ customers, onSelect, selectedCustomer, resetDropdown }) => {
   const [searchTerm, setSearchTerm] = useState(""); // State untuk pencarian
 
-  // Reset dropdown dan pencarian setelah penyimpanan data
+  // Reset dropdown dan pencarian setelah halaman di-refresh atau data disimpan
   useEffect(() => {
     if (resetDropdown) {
       setSearchTerm(""); // Reset kolom pencarian
       onSelect(""); // Reset pilihan customer ke default
     }
-  }, [resetDropdown, onSelect]);
+  }, [resetDropdown]);
 
   // Filter daftar customer berdasarkan input pencarian
   const filteredCustomers = customers.filter(customer =>

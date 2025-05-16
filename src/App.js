@@ -149,7 +149,8 @@ const loadCustomerData = async () => {
             <p>Proses sedang berlangsung...</p>
           </div>
         )}
-          <h2 className="star-wars-title">Selamat datang, ({userRole.toUpperCase()})</h2>
+          <h2 className="welcome-text">Selamat datang, ({currentUser || "User"})</h2>
+
 
           {userRole === "admin" && <MasterUpload onUpload={handleUpload} onLoad={loadCustomerData} setUploading={setUploading} setCustomerList={setCustomerList} />}
         

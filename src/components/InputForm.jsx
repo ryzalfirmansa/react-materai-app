@@ -84,6 +84,7 @@ const InputForm = ({ selectedCustomer, setSelectedCustomer, currentUser, userRol
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+
 const handleSave = async () => {
   if (!currentUser) {
     alert("Anda harus login terlebih dahulu!");
@@ -98,7 +99,7 @@ const handleSave = async () => {
   const newEntry = {
     ...formData,
     customer: selectedCustomer,
-    userPenginput: currentUser, // Simpan username yang dimasukkan user saat login
+    userPenginput: currentUser,
   };
 
   const docRef = doc(db, "users", currentUser);
@@ -106,22 +107,16 @@ const handleSave = async () => {
     data: arrayUnion(newEntry),
   });
 
-  setFormData({
-    nomor: 1,
-    tanggal: new Date().toISOString().slice(0, 10),
-    noInvKw: "",
-    nilaiInvKw: "",
-  });
-
   alert("Data berhasil disimpan ke Firebase!");
-
-  setSelectedCustomer(""); // Reset dropdown ke "-- Pilih Customer --"
-  setResetDropdown(prev => !prev); // Trigger perubahan untuk reset dropdown
+  
+  setSelectedCustomer(""); // Reset dropdown ke default
+  setResetDropdown(prev => !prev); // Trigger reset untuk pencarian dan dropdown
 };
+
 
   return (
     <div className="form-container">
-      <h2 className="star-wars-title">Form Input Data (User: {currentUser})</h2>
+      <h2 className="star-wars-title">Form Input Data </h2>
       <input type="text" name="nomor" value={formData.nomor} disabled placeholder="Nomor Otomatis" />
       <input type="date" name="tanggal" value={formData.tanggal} onChange={handleChange} />
       <input type="text" name="noInvKw" value={formData.noInvKw} onChange={handleChange} placeholder="No. Invoice/Kwitansi" />
