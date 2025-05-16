@@ -38,7 +38,7 @@ useEffect(() => {
   const initializeUser = () => {
     const savedUser = localStorage.getItem("currentUser");
     const savedRole = localStorage.getItem("userRole") || "guest"; // Pastikan default ke 'guest'
-    
+
     console.log("Status uploading:", uploading);
 
     if (savedUser) {
@@ -56,14 +56,8 @@ useEffect(() => {
   };
 
   initializeUser();
-  
-  if (!sessionStorage.getItem("hasLoaded")) {
-    sessionStorage.setItem("hasLoaded", "true");
-    fetchCustomerData(); // Hanya jalankan sekali saat halaman dimuat
-  }
+  fetchCustomerData(); // Pastikan daftar customer selalu diperbarui saat user login
 }, []);
-
-  
 
 
   
@@ -85,72 +79,45 @@ const handleUpload = async (fileContent) => {
   }
 };
 
-
-
   // Ambil data pelanggan dari Firebase
 const loadCustomerData = async () => {
-  if (sessionStorage.getItem("hasLoaded")) {
-    return; // Jika sudah diproses sebelumnya, hentikan eksekusi
-  }
-
-  sessionStorage.setItem("hasLoaded", "true");
-  setUploading(true); // Tampilkan progress bar
+  setUploading(true); // Tampilkan progress bar saat data dimuat
 
   try {
     const docRef = doc(db, "customers", "customerData");
     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      setCustomerList(docSnap.data().data.map(row => row["Nama Customer"]));
-      localStorage.setItem("customerList", JSON.stringify(docSnap.data().data.map(row => row["Nama Customer"])));
+    if (docSnap.exists() && Array.isArray(docSnap.data().data)) {
+      const rawData = docSnap.data().data;
 
-      alert("Data customer berhasil dimuat !");
+      // Pastikan setiap entri memiliki field "Nama Customer"
+      const customerNames = rawData.map(row => {
+        if (row && row["Nama Customer"]) {
+          return row["Nama Customer"];
+        } else {
+          console.warn("Data tidak memiliki field 'Nama Customer':", row);
+          return null;
+        }
+      }).filter(name => name !== null); // Hapus entri yang tidak valid
+
+      if (customerNames.length > 0) {
+        setCustomerList(customerNames);
+        setSelectedCustomer(customerNames[0]); // Pilih customer pertama sebagai default
+        console.log("Data customer berhasil dimuat dari Firebase:", customerNames);
+      } else {
+        console.warn("Daftar customer kosong.");
+        setCustomerList([]);
+      }
     } else {
-      alert("Data tidak ditemukan.");
+      console.warn("Data customer tidak ditemukan di Firestore.");
+      setCustomerList([]);
     }
   } catch (error) {
-    console.error("Error mengambil data:", error);
-    alert("Gagal mengambil data.");
+    console.error("Error mengambil data pelanggan:", error);
+    alert("Gagal mengambil data pelanggan dari Firebase.");
   } finally {
     setUploading(false); // Sembunyikan progress bar setelah selesai
   }
-};
-
-
-
-const handleDeleteCustomer = async (index) => {
-  if (customerList.length === 0) return;
-
-  const deletedCustomer = customerList[index];
-
-  // Hapus dari Firestore
-  const docRef = doc(db, "customers", "customerData");
-  const docSnap = await getDoc(docRef);
-
-  if (docSnap.exists()) {
-    const newCustomerList = docSnap.data().data.filter((customer) => customer["Nama Customer"] !== deletedCustomer);
-    await updateDoc(docRef, { data: newCustomerList });
-
-    // Hapus dari state dengan benar
-    setCustomerList((prevList) => {
-      const updatedList = prevList.filter((_, i) => i !== index);
-      localStorage.setItem("customerList", JSON.stringify(updatedList));
-      return updatedList;
-    });
-  }
-};
-
-
-const handleDeleteAllCustomers = async () => {
-  if (customerList.length === 0) return;
-
-  // Hapus semua data di Firestore
-  const docRef = doc(db, "customers", "customerData");
-  await setDoc(docRef, { data: [] });
-
-  // Kosongkan dari state dan local storage dengan benar
-  setCustomerList([]);
-  localStorage.removeItem("customerList");
 };
 
 

@@ -76,13 +76,6 @@ option[value=""] {
   color: #888;
 }
 
-label {
-  font-size: large;
-  font-family: "Montserrat", "Nunito", sans-serif;
-  display: block; /* Pastikan label berada di baris tersendiri */
-  margin-bottom: 12px; /* Tambahkan jarak agar tidak terlalu dekat dengan dropdown */
-  font-weight: bold;
-}
 
 .user-name {
   width: 100%;
@@ -218,7 +211,6 @@ button:hover {
 
 .save-data{
   width: 100%;
-  padding: 10px;
   margin-top: 10px;
   gap: 10px; /* Beri jarak antar tombol */
 }
@@ -270,10 +262,9 @@ button:hover {
 
 .App h2, 
 .App h3,
-.App h4,
 .master-upload-title {
-  font-family: "Inter", "Poppins", sans-serif;
-  font-size: 20px;
+  font-family: 'Staatliches', sans-serif;
+  font-size: 25px;
   color: #FFD700;
   text-shadow: 2px 2px 4px #000;
 }
@@ -371,23 +362,4 @@ button:hover {
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
-}
-
-
-:root {
-  --whatsapp-green: #25D366;
-  --whatsapp-dark: #128C7E;
-  --starwars-gold: #FFD700;
-}
-.star-wars-title {
-  color: var(--starwars-gold);
-}
-button {
-  background: var(--whatsapp-green);
-}
-
-
-.history-table tbody tr:hover {
-  background-color: rgba(0, 123, 255, 0.1);
-  transition: background 0.3s ease-in-out;
 }

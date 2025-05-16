@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
-import * as XLSX from "xlsx";
 import { initializeApp } from "firebase/app";
 
 // Konfigurasi Firebase
@@ -18,7 +17,6 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const InputForm = ({ selectedCustomer, setSelectedCustomer, currentUser, userRole }) => {
-
   const [formData, setFormData] = useState({
     nomor: 1,
     tanggal: new Date().toISOString().slice(0, 10),
@@ -26,100 +24,104 @@ const InputForm = ({ selectedCustomer, setSelectedCustomer, currentUser, userRol
     nilaiInvKw: "",
   });
 
-  /*useEffect(() => {
+  const [customerList, setCustomerList] = useState([]);
+
+  useEffect(() => {
     const loadUserData = async () => {
       if (!currentUser) return;
 
-      const docRef = doc(db, "users", currentUser);
-      const docSnap = await getDoc(docRef);
+      try {
+        const docRef = doc(db, "users", currentUser);
+        const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        const userData = docSnap.data().data || [];
-        setFormData((prevData) => ({
-          ...prevData,
-          nomor: userData.length + 1,
-        }));
-      } else {
-        await setDoc(docRef, { username: currentUser, data: [] });
+        if (docSnap.exists()) {
+          const userData = Array.isArray(docSnap.data().data) ? docSnap.data().data : [];
+          setFormData((prevData) => ({
+            ...prevData,
+            nomor: userData.length + 1,
+          }));
+        } else {
+          console.warn(`Data user ${currentUser} tidak ditemukan, membuat data baru.`);
+          await setDoc(docRef, { username: currentUser, data: [] });
+        }
+      } catch (error) {
+        console.error("Error saat memuat data user:", error);
       }
     };
 
     loadUserData();
-  }, [currentUser]);*/
+  }, [currentUser]);
 
+  // Muat daftar customer dari Firestore
   useEffect(() => {
-  const loadUserData = async () => {
-    if (!currentUser) return;
+    const loadCustomerList = async () => {
+      try {
+        const docRef = doc(db, "customers", "customerData");
+        const docSnap = await getDoc(docRef);
 
-    try {
-      const docRef = doc(db, "users", currentUser);
-      const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const updatedCustomerList = docSnap.data().data.map(row => row["Nama Customer"]);
+          setCustomerList(updatedCustomerList);
+          localStorage.setItem("customerList", JSON.stringify(updatedCustomerList));
 
-      if (docSnap.exists()) {
-        const userData = Array.isArray(docSnap.data().data) ? docSnap.data().data : [];
-
-        setFormData((prevData) => ({
-          ...prevData,
-          nomor: userData.length + 1,
-        }));
-      } else {
-        console.warn(`Data user ${currentUser} tidak ditemukan, membuat data baru.`);
-        await setDoc(docRef, { username: currentUser, data: [] });
+          if (!selectedCustomer) {
+            setSelectedCustomer(updatedCustomerList[0]); // Pilih default customer pertama
+          }
+        } else {
+          console.warn("Data pelanggan tidak ditemukan.");
+        }
+      } catch (error) {
+        console.error("Error saat mengambil daftar pelanggan:", error);
       }
-    } catch (error) {
-      console.error("Error saat memuat data user:", error);
-    }
-  };
+    };
 
-  loadUserData();
-}, [currentUser]);
+    loadCustomerList();
+  }, [selectedCustomer]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-const handleSave = async () => {
-  if (!currentUser) {
-    alert("Anda harus login terlebih dahulu!");
-    return;
-  }
+  const handleSave = async () => {
+    if (!currentUser) {
+      alert("Anda harus login terlebih dahulu!");
+      return;
+    }
 
-  if (!selectedCustomer) {
-    alert("Pilih customer terlebih dahulu!");
-    return;
-  }
+    if (!selectedCustomer) {
+      alert("Pilih customer terlebih dahulu!");
+      return;
+    }
 
-  const newEntry = {
-    ...formData,
-    customer: selectedCustomer,
-    userPenginput: currentUser, // Simpan username yang dimasukkan user saat login
+    const newEntry = {
+      ...formData,
+      customer: selectedCustomer,
+      userPenginput: currentUser, // Simpan username yang dimasukkan user saat login
+    };
+
+    const docRef = doc(db, "users", currentUser);
+    await updateDoc(docRef, {
+      data: arrayUnion(newEntry),
+    });
+
+    setFormData({
+      nomor: 1,
+      tanggal: new Date().toISOString().slice(0, 10),
+      noInvKw: "",
+      nilaiInvKw: "",
+    });
+
+    alert("Data berhasil disimpan ke Firebase!");
+    setSelectedCustomer("");
   };
 
-  const docRef = doc(db, "users", currentUser);
-  await updateDoc(docRef, {
-    data: arrayUnion(newEntry),
-  });
-
-  setFormData({
-    nomor: 1,
-    tanggal: new Date().toISOString().slice(0, 10),
-    noInvKw: "",
-    nilaiInvKw: "",
-  });
-
-  alert("Data berhasil disimpan ke Firebase!");
-  setSelectedCustomer("");
-};
-
-  // Ekspor Data ke File Excel
   return (
     <div className="form-container">
-      <h4 className="star-wars-title">Form Input Data (User: {currentUser})</h4>
-
+      <h2 className="star-wars-title">Form Input Data (User: {currentUser})</h2>
       <input type="text" name="nomor" value={formData.nomor} disabled placeholder="Nomor Otomatis" />
       <input type="date" name="tanggal" value={formData.tanggal} onChange={handleChange} />
-      <input type="text" name="noInvKw" value={formData.noInvKw} onChange={handleChange} placeholder="No Inv/Kw" />
-      <input type="number" name="nilaiInvKw" value={formData.nilaiInvKw} onChange={handleChange} placeholder="Nilai Inv/Kw" />
+      <input type="text" name="noInvKw" value={formData.noInvKw} onChange={handleChange} placeholder="No. Invoice/Kwitansi" />
+      <input type="number" name="nilaiInvKw" value={formData.nilaiInvKw} onChange={handleChange} placeholder="Nilai Invoice/Kwitansi" />
 
       <button className="save-data" onClick={handleSave}>Simpan ke Database</button>
     </div>

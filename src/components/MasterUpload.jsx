@@ -57,18 +57,24 @@ const handleUploadAndLoadData = async () => {
       const docSnap = await getDoc(docRef);
 
       let existingData = docSnap.exists() ? docSnap.data().data || [] : [];
-      let updatedData = [...existingData, ...sheetData]; // Gabungkan data lama dengan data baru
+      
+      // Pastikan setiap entri memiliki "Nama Customer"
+      let updatedData = [...existingData, ...sheetData.filter(row => row["Nama Customer"])];
 
       // Simpan data gabungan ke Firestore
       await setDoc(docRef, { data: updatedData });
 
       alert(`File ${fileName} berhasil dikonversi ke JSON dan ditambahkan ke database!`);
 
-      // Langsung muat data terbaru ke UI tanpa perlu tombol terpisah
-      const updatedCustomerList = updatedData.map(row => row["Nama Customer"]);
-      setCustomerList(updatedCustomerList);
-      localStorage.setItem("customerList", JSON.stringify(updatedCustomerList));
-      
+      // Ambil data langsung dari Firestore, bukan localStorage
+      const refreshedSnap = await getDoc(docRef);
+      if (refreshedSnap.exists()) {
+        setCustomerList(refreshedSnap.data().data.map(row => row["Nama Customer"]));
+      } else {
+        setCustomerList([]);
+        console.warn("Data customer kosong setelah upload.");
+      }
+
     } catch (error) {
       console.error("Error mengunggah dan memuat data:", error);
       alert("Gagal mengunggah dan memuat data.");
@@ -79,8 +85,6 @@ const handleUploadAndLoadData = async () => {
 
   reader.readAsArrayBuffer(selectedFile);
 };
-
-
 
   return (
     <div>
