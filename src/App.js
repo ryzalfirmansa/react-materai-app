@@ -59,7 +59,6 @@ const handleUpload = async (fileContent) => {
     alert("File templatetest.xlsx berhasil dikonversi ke JSON dan disimpan di Firebase!");
 
     // Refresh halaman setelah user klik "OK"
-    window.location.reload();
   } catch (error) {
     console.error("Error upload:", error);
     alert("Gagal mengunggah data.");
