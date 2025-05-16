@@ -55,13 +55,9 @@ const handleUploadAndLoadData = async () => {
       // Simpan data ke Firestore
       await setDoc(doc(db, "customers", "customerData"), { data: sheetData });
 
-      // Cek apakah alert sudah muncul sebelumnya di sesi ini
-      //if (!sessionStorage.getItem("hasAlerted")) {
-        //alert(`File ${fileName} berhasil dikonversi ke JSON dan disimpan di Firebase!`);
-        //sessionStorage.setItem("hasAlerted", "true");
-      //}
+      alert(`File ${fileName} berhasil dikonversi ke JSON dan disimpan di Firebase!`);
 
-      // Ambil data terbaru dari Firebase
+      // Langsung muat data terbaru ke UI tanpa perlu tombol terpisah
       const docRef = doc(db, "customers", "customerData");
       const docSnap = await getDoc(docRef);
 
@@ -72,12 +68,6 @@ const handleUploadAndLoadData = async () => {
       } else {
         alert("Data tidak ditemukan.");
       }
-
-      // Pastikan refresh hanya terjadi sekali
-      //if (!sessionStorage.getItem("hasRefreshed")) {
-       // sessionStorage.setItem("hasRefreshed", "true");
-      //}
-
     } catch (error) {
       console.error("Error mengunggah dan memuat data:", error);
       alert("Gagal mengunggah dan memuat data.");

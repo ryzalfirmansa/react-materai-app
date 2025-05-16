@@ -56,12 +56,10 @@ const handleUpload = async (fileContent) => {
   
   try {
     await setDoc(doc(db, "customers", "customerData"), { data: fileContent });
+    alert("File templatetest.xlsx berhasil dikonversi ke JSON dan disimpan di Firebase!");
 
-    // Cek apakah halaman sudah direfresh sebelumnya
-    if (!sessionStorage.getItem("hasRefreshed")) {
-      alert("File templatetest.xlsx berhasil dikonversi ke JSON dan disimpan di Firebase!");
-      sessionStorage.setItem("hasRefreshed", "true");
-    }
+    // Refresh halaman setelah user klik "OK"
+    window.location.reload();
   } catch (error) {
     console.error("Error upload:", error);
     alert("Gagal mengunggah data.");
@@ -74,21 +72,33 @@ const handleUpload = async (fileContent) => {
 
   // Ambil data pelanggan dari Firebase
 const loadCustomerData = async () => {
-  setUploading(true); // Tampilkan progress bar
-  
-  const docRef = doc(db, "customers", "customerData");
-  const docSnap = await getDoc(docRef);
-
-  if (docSnap.exists()) {
-    setCustomerList(docSnap.data().data.map(row => row["Nama Customer"]));
-    localStorage.setItem("customerList", JSON.stringify(docSnap.data().data.map(row => row["Nama Customer"])));
-    alert("Data customer berhasil dimuat dari Firebase!");
-  } else {
-    alert("Data tidak ditemukan.");
+  if (sessionStorage.getItem("hasLoaded")) {
+    return; // Jika sudah diproses sebelumnya, hentikan eksekusi
   }
 
-  setUploading(false); // Sembunyikan progress bar setelah selesai
+  sessionStorage.setItem("hasLoaded", "true");
+  setUploading(true); // Tampilkan progress bar
+
+  try {
+    const docRef = doc(db, "customers", "customerData");
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      setCustomerList(docSnap.data().data.map(row => row["Nama Customer"]));
+      localStorage.setItem("customerList", JSON.stringify(docSnap.data().data.map(row => row["Nama Customer"])));
+
+      alert("Data customer berhasil dimuat dari Firebase!");
+    } else {
+      alert("Data tidak ditemukan.");
+    }
+  } catch (error) {
+    console.error("Error mengambil data:", error);
+    alert("Gagal mengambil data dari Firebase.");
+  } finally {
+    setUploading(false); // Sembunyikan progress bar setelah selesai
+  }
 };
+
 
 
 const handleDeleteCustomer = async (index) => {
