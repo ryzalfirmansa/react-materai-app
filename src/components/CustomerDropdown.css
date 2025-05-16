@@ -25,9 +25,11 @@
   padding: 12px;
   z-index: 10;
   width: 93%;
-  font-size: 17px;
   font-family: "Inter", "Poppins", sans-serif;
+  max-height: 200px; /* Batasi tinggi dropdown agar tidak terlalu panjang */
+  overflow-y: auto; /* Tambahkan fitur scroll jika daftar terlalu panjang */
 }
+
 
 .search-input {
   width: 100%;
