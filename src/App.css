@@ -376,8 +376,7 @@ button:hover {
   font-size: 16px;
 }
 
-
-/* Pastikan tabel histori mengikuti ukuran .App */
+/* Pastikan tabel histori mengikuti ukuran `.App` */
 .history-table {
   width: 100%;
   max-width: 500px; /* Sesuaikan dengan ukuran .App */
@@ -407,19 +406,20 @@ button:hover {
   text-overflow: ellipsis;
 }
 
-/* Perkecil ukuran kolom Nama Customer */
-.history-table td:nth-child(3), .history-table th:nth-child(3) {
-  max-width: 100px; /* Sesuaikan ukuran */
-  white-space: nowrap; /* Hindari teks berpindah baris */
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 /* Perkecil ukuran kolom Aksi */
 .history-table td:last-child, .history-table th:last-child {
   max-width: 80px; /* Sesuaikan ukuran */
   min-width: 60px; /* Ukuran minimal agar tetap terbaca */
   text-align: center;
+}
+
+/* Pastikan tombol tetap sejajar dalam kolom aksi */
+.history-table td:last-child {
+  display: flex;
+  flex-direction: column; /* Susun tombol secara vertikal */
+  justify-content: center;
+  align-items: center;
+  gap: 5px; /* Beri jarak antar tombol */
 }
 
 /* Perkecil ukuran tombol Edit dan Hapus */
@@ -432,16 +432,6 @@ button:hover {
   display: inline-block;
   min-width: 50px; /* Ukuran minimal agar tetap proporsional */
 }
-
-/* Pastikan tombol tetap sejajar dalam kolom aksi */
-.history-table td:last-child {
-  display: flex;
-  flex-direction: column; /* Susun tombol secara vertikal */
-  justify-content: center;
-  align-items: center;
-  gap: 3px; /* Kurangi jarak antar tombol */
-}
-
 
 /* Responsiveness untuk layar lebih kecil */
 @media screen and (max-width: 768px) {
@@ -473,6 +463,11 @@ button:hover {
     flex-direction: column; /* Susun tombol secara vertikal jika layar kecil */
     align-items: center;
   }
+
+  .edit-button, .delete-button {
+    font-size: 8px; /* Ukuran lebih kecil di layar kecil */
+    padding: 3px 5px;
+  }
 }
 
 /* Responsif untuk layar sangat kecil (mobile) */
@@ -488,5 +483,10 @@ button:hover {
   .history-table td:last-child {
     flex-direction: column; /* Susun tombol secara vertikal */
     align-items: center;
+  }
+
+  .edit-button, .delete-button {
+    font-size: 7px; /* Perkecil ukuran tombol lebih lanjut */
+    padding: 2px 4px;
   }
 }
