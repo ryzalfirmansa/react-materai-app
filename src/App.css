@@ -1,8 +1,8 @@
 body {
   font-family: 'Inter', sans-serif;
   background: #e5ddd5; /* Warna latar belakang WhatsApp */
-  margin: 0;
-  padding: 0;
+  margin: 20px;
+  padding: 10px;
   display: flex;
   justify-content: center;
   align-items: flex-start; /* Konten dimulai dari atas */
@@ -72,23 +72,29 @@ body {
 
 /* Grid untuk layout lebih fleksibel */
 .form-container {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
   width: 100%;
+  max-width: 450px; /* Batasi agar tidak terlalu besar */
+  padding: 15px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Pusatkan konten */
+  margin: auto;
 }
 
 /* Input dan Dropdown lebih premium */
 input, select {
-  width: 94%;
-  padding: 12px;
-  border: 3px solid #ccc;
+  width: 100%;
+  max-width: 400px; /* Batasi agar tetap dalam background */
+  padding: 10px;
+  border: 2px solid #ccc;
   border-radius: 6px;
   font-size: 16px;
-  transition: all 0.3s ease-in-out;
 }
 
-input:focus, select:focus {
+input:focus {
   border-color: #128C7E; /* Warna hijau khas WhatsApp */
   outline: none;
 }
@@ -225,13 +231,39 @@ button:hover {
 }
 
 
-.history-button{
+/* Pastikan tombol berada dalam batas background `.App` */
+.history-button {
+  text-align: center; /* Pusatkan teks tombol */
   width: 100%;
+  max-width: 400px; /* Gunakan batasan agar tetap proporsional */
   margin-top: 10px;
+  display: flex;
   flex-direction: column; /* Susun tombol secara vertikal */
-  gap: 10px; /* Beri jarak antar tombol */
+  gap: 10px;
+  align-items: center; /* Pastikan tombol berada di tengah */
+  justify-content: center; /* Pusatkan vertikal */
+  margin: auto; /* Memastikan tombol tetap di tengah */
 }
 
+/* Pastikan tombol lebih nyaman digunakan dan tidak miring */
+.history-button button {
+  text-align: center;
+  width: 100%;
+  max-width: 250px;
+  padding: 12px;
+  background-color: #128C7E; /* Warna khas WhatsApp */
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Efek hover untuk membuat tombol lebih interaktif */
+.history-button button:hover {
+  background-color: #0d6e5f;
+}
 
 /* Agar tabel tetap terlihat baik di mobile */
 @media screen and (max-width: 600px) {
@@ -315,11 +347,11 @@ button:hover {
 
 
 .star-wars-title {
-  font-family: 'Staatliches', sans-serif;
-  font-size: 24px;
-  color: #FFD700; /* Warna emas khas Star Wars */
-  text-transform: uppercase;
-  text-shadow: 2px 2px 5px #000;
+  font-size: 22px; /* Perkecil agar lebih seimbang */
+  font-weight: bold;
+  color: #F4D03F; /* Warna emas khas Star Wars */
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 .App h2, 

@@ -150,24 +150,17 @@ const loadCustomerData = async () => {
           </div>
         )}
           <h2 className="welcome-text">Selamat datang, ({currentUser || "User"})</h2>
-
-
           {userRole === "admin" && <MasterUpload onUpload={handleUpload} onLoad={loadCustomerData} setUploading={setUploading} setCustomerList={setCustomerList} />}
-        
-
           {customerList.length > 0 && (
             <CustomerDropdown customers={customerList} onSelect={setSelectedCustomer} selectedCustomer={selectedCustomer} />
           )}
-
           {selectedCustomer && (
             <InputForm selectedCustomer={selectedCustomer} setSelectedCustomer={setSelectedCustomer} currentUser={currentUser} userRole={userRole} customers={customerList} />
           )}
-
           <div className="user-actions">
             {userRole === "admin" && <button className="manage-button" onClick={() => setShowCustomerManagement(true)}>Kelola Data Customer</button>}
             <button className="history-button" onClick={() => setShowHistory(true)}>Lihat Histori</button>
           </div>
-
           <div className="logout-section">
             <button className="logout-button" onClick={() => {
               localStorage.removeItem("currentUser");

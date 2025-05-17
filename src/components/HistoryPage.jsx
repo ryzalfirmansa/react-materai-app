@@ -123,7 +123,7 @@ const HistoryPage = ({ currentUser, userRole, onBack }) => {
                 <th>No Inv/Kw</th> 
                 <th>Nilai Inv/Kw</th> 
                 <th>User Penginput</th> 
-                <th>Aksi</th> {/* Kolom aksi untuk tombol */}
+                <th>Aksi</th>
               </tr> 
             </thead> 
             <tbody> 

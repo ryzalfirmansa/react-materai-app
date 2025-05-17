@@ -112,8 +112,6 @@ const handleSave = async () => {
   setSelectedCustomer(""); // Reset dropdown ke default
   setResetDropdown(prev => !prev); // Trigger reset untuk pencarian dan dropdown
 };
-
-
   return (
     <div className="form-container">
       <h2 className="star-wars-title">Input Data </h2>

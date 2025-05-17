@@ -95,7 +95,6 @@ const HistoryTable = ({ currentUser }) => {
               ))}
             </tbody>
           </table>
-
           {/* Form edit untuk mengubah data */}
           {editingIndex !== null && (
             <div className="edit-form">
