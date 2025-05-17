@@ -449,8 +449,16 @@ button:hover {
   border: none;
 }
 
+
+
 .edit-button:hover {
   background-color: #218838;
+}
+
+.save-edit-button, .cancel-edit-button{
+margin-top: 5px;
+margin-left: 5px;
+
 }
 
 /* Warna dan efek tombol hapus */

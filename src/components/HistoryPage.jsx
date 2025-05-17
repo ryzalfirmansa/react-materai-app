@@ -110,12 +110,10 @@ const HistoryPage = ({ currentUser, userRole, onBack }) => {
   return ( 
     <div className="history-container"> 
       <h2>Histori Data untuk {currentUser}</h2> 
-
       {/* Input pencarian */}
       <input type="text" placeholder="Cari data..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="search-input" /> 
-
       {filteredData.length > 0 ? ( 
-        <> 
+          <> 
           <table className="history-table"> 
             <thead> 
               <tr> 
@@ -134,28 +132,22 @@ const HistoryPage = ({ currentUser, userRole, onBack }) => {
                   <td>{data.nomor}</td> 
                   <td>{data.tanggal}</td> 
                   <td>{data.customer}</td> 
-                  <td>{data.noInvKw}</td> 
-                  <td>{data.nilaiInvKw}</td> 
+                  <td>{data.noInvKw}</td>  
+                  <td>{Number(data.nilaiInvKw).toLocaleString("id-ID")}</td> {/* Format angka */}
                   <td>{data.userPenginput}</td> 
                   <td>
                     <button onClick={() => handleEditClick(index)} className="edit-button">Edit</button>
-                    <button onClick={() => handleDelete(index)} className="delete-button">Hapus</button>
                   </td>
                 </tr> 
               ))} 
             </tbody> 
           </table> 
-
-          {/* Tombol Ekspor */}
-          <button className="export-button" onClick={handleExportExcel}>Export ke Excel</button>
-
           {/* Form Edit */}
           {editingIndex !== null && (
             <div className="edit-form">
-              <h3>Edit Data</h3>
               <input type="text" value={editedData.customer} onChange={(e) => setEditedData({ ...editedData, customer: e.target.value })} />
               <input type="text" value={editedData.noInvKw} onChange={(e) => setEditedData({ ...editedData, noInvKw: e.target.value })} />
-              <input type="number" value={editedData.nilaiInvKw} onChange={(e) => setEditedData({ ...editedData, nilaiInvKw: e.target.value })} />
+              <input type="number" value={editedData.nilaiInvKw} onChange={(e) => setEditedData({ ...editedData, nilaiInvKw: e.target.value })} />  
               <button onClick={handleSaveEdit} className="save-edit-button">Simpan</button>
               <button onClick={() => setEditingIndex(null)} className="cancel-edit-button">Batal</button>
             </div>
@@ -164,7 +156,8 @@ const HistoryPage = ({ currentUser, userRole, onBack }) => {
       ) : ( 
         <p>Tidak ada data histori.</p> 
       )} 
-
+          {/* Tombol Ekspor */}
+          <button className="export-button" onClick={handleExportExcel}>Export ke Excel</button>
       <button className="back-button" onClick={onBack}>Kembali</button> 
     </div> 
   ); 

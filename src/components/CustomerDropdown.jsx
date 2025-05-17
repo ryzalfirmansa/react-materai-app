@@ -19,7 +19,6 @@ const CustomerDropdown = ({ customers, onSelect, selectedCustomer, resetDropdown
   return (
     <div className="dropdown-container">
       <label>Pilih Nama Customer:</label>
-      
       {/* Input untuk pencarian di atas dropdown */}
       <input 
         type="text"
@@ -28,7 +27,6 @@ const CustomerDropdown = ({ customers, onSelect, selectedCustomer, resetDropdown
         onChange={(e) => setSearchTerm(e.target.value)}
         className="search-input"
       />
-
       {/* Dropdown dengan hasil pencarian */}
       <select value={selectedCustomer} onChange={(e) => onSelect(e.target.value)}>
         <option value="">-- Pilih Customer --</option>

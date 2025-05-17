@@ -74,7 +74,6 @@ const handleUploadAndLoadData = async () => {
         setCustomerList([]);
         console.warn("Data customer kosong setelah upload.");
       }
-
     } catch (error) {
       console.error("Error mengunggah dan memuat data:", error);
       alert("Gagal mengunggah dan memuat data.");
@@ -82,7 +81,6 @@ const handleUploadAndLoadData = async () => {
       setUploading(false); // Sembunyikan progress bar setelah selesai
     }
   };
-
   reader.readAsArrayBuffer(selectedFile);
 };
 

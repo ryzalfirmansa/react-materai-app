@@ -116,12 +116,11 @@ const handleSave = async () => {
 
   return (
     <div className="form-container">
-      <h2 className="star-wars-title">Form Input Data </h2>
+      <h2 className="star-wars-title">Input Data </h2>
       <input type="text" name="nomor" value={formData.nomor} disabled placeholder="Nomor Otomatis" />
       <input type="date" name="tanggal" value={formData.tanggal} onChange={handleChange} />
       <input type="text" name="noInvKw" value={formData.noInvKw} onChange={handleChange} placeholder="No. Invoice/Kwitansi" />
       <input type="number" name="nilaiInvKw" value={formData.nilaiInvKw} onChange={handleChange} placeholder="Nilai Invoice/Kwitansi" />
-
       <button className="save-data" onClick={handleSave}>Simpan ke Database</button>
     </div>
   );
