@@ -67,55 +67,43 @@ const HistoryPage = ({ currentUser, userRole, onBack }) => {
     } 
   }; 
 
-  /*/ Fungsi ekspor ke Excel 
-  const handleExportExcel = async () => { 
-    if (filteredData.length === 0) { 
-      alert("Tidak ada data untuk diekspor!"); 
-      return; 
-    } 
-    const formattedData = filteredData.map((entry) => ({ 
-      nomor: entry.nomor, 
-      tanggal: entry.tanggal, 
-      customer: entry.customer, 
-      noInvKw: entry.noInvKw, 
-      nilaiInvKw: entry.nilaiInvKw, 
-    })); 
-    const workbook = XLSX.utils.book_new(); 
-    const worksheet = XLSX.utils.json_to_sheet(formattedData); 
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Histori User"); 
-    try { 
-      XLSX.writeFile(workbook, `Histori_${currentUser}.xlsx`); 
-      alert("Data histori berhasil diekspor ke Excel!"); 
-    } catch (error) { 
-      console.error("Error saat ekspor:", error); 
-      alert("Gagal mengekspor data."); 
-    } 
-  };*/ 
-
 const handleExportExcel = async () => {
   if (filteredData.length === 0) {
     alert("Tidak ada data untuk diekspor!");
     return;
   }
 
+  // Buat array dengan urutan kolom yang benar
+  const formattedData = filteredData.map(data => ({
+    nomor: data.nomor,
+    tanggal: data.tanggal,
+    customer: data.customer,
+    noInvKw: data.noInvKw,
+    nilaiInvKw: data.nilaiInvKw,
+    userPenginput: data.userPenginput,
+  }));
+
+  console.log("Data yang akan diekspor:", formattedData); // Cek apakah urutan sudah benar
+
   const workbook = XLSX.utils.book_new();
-  const worksheet = XLSX.utils.json_to_sheet(filteredData);
+  const worksheet = XLSX.utils.json_to_sheet(formattedData);
+
+  // Set judul kolom sesuai urutan yang diinginkan
+  XLSX.utils.sheet_add_aoa(worksheet, [
+    ["Nomor", "Tanggal", "Customer", "No Inv/Kw", "Nilai Inv/Kw", "User Penginput"]
+  ], { origin: "A1" });
+
   XLSX.utils.book_append_sheet(workbook, worksheet, "Histori User");
 
   try {
     XLSX.writeFile(workbook, `Histori_${currentUser}.xlsx`);
     alert("Data histori berhasil diekspor ke Excel!");
-
-    // Kosongkan histori user setelah ekspor
-    await setDoc(doc(db, "users", currentUser), { data: [] });
-    setHistoryData([]);
-    
-    alert("Data histori telah dihapus setelah ekspor.");
   } catch (error) {
     console.error("Error saat ekspor:", error);
     alert("Gagal mengekspor data.");
   }
 };
+
 
 
   return ( 
