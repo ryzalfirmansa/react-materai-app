@@ -21,6 +21,7 @@ body {
   min-height: auto;
   overflow: hidden; /* Cegah elemen keluar dari batas */
 }
+
 /* Grid untuk layout lebih fleksibel */
 .form-container {
   width: auto;
@@ -172,6 +173,7 @@ button:hover {
 
 
 
+
 .history-button {
   text-align: center; /* Pusatkan teks tombol */
   width: 100%;
@@ -202,9 +204,14 @@ button:hover {
 
 
 
+
 /* Tambahkan jarak untuk tombol */
 .view-data-button {
   margin-top: 20px;
+}
+
+.history-table {
+  margin-bottom: 20px;
 }
 
 .export-button, .back-button {
@@ -476,5 +483,86 @@ margin-left: 5px;
 
 .delete-button:hover {
   background-color: darkred;
+}
+
+@media screen and (max-width: 480px) {
+  .App {
+    width: 98%;
+    max-width: 360px;
+    padding: 10px;
+  }
+
+  .form-container {
+    max-width: 95%;
+    padding: 8px;
+  }
+
+  .history-table th, .history-table td {
+    font-size: 8px;
+    padding: 4px;
+  }
+
+/* Pastikan tabel lebih proporsional */
+.history-table {
+  width: 100%;
+  max-width: 95%; /* Kurangi ukuran tabel agar lebih pas */
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+/* Header tabel */
+.history-table th {
+  background-color: #128C7E;
+  color: white;
+  font-size: 11px; /* Perkecil ukuran font */
+  font-weight: bold;
+  padding: 10px;
+  text-align: center;
+}
+
+/* Isi tabel */
+.history-table td {
+  font-size: 11px; /* Perkecil ukuran teks */
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #ddd;
+  background: #fff;
+  white-space: nowrap; /* Pastikan teks tetap dalam satu baris */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Perkecil kolom Nama Customer */
+.history-table td:nth-child(3), .history-table th:nth-child(3) {
+  max-width: 80px; /* Kurangi ukuran kolom */
+  text-align: left;
+}
+
+/* Perkecil ukuran kolom Aksi */
+.history-table td:last-child, .history-table th:last-child {
+  max-width: 70px; /* Sesuaikan ukuran */
+  min-width: 50px; /* Ukuran minimal agar tetap terbaca */
+  text-align: center;
+}
+
+/* Tata letak tombol agar tidak sejajar */
+.history-table td:last-child {
+  display: flex;
+  flex-direction: column; /* Susun tombol dari atas ke bawah */
+  justify-content: center;
+  align-items: center;
+  gap: 6px; /* Beri jarak antar tombol */
+}
+
+  input, select {
+    width: 100%; /* Pastikan input dan dropdown memenuhi layar kecil */
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .edit-button, .delete-button {
+    font-size: 7px;
+    padding: 3px;
+  }
 }
 
