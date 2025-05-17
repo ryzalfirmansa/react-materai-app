@@ -11,7 +11,7 @@ body {
 
 .App {
   width: 100%;
-  max-width: 600px; /* Sesuaikan ukuran agar tetap nyaman */
+  max-width: 600px;
   background: white;
   padding: 20px;
   border-radius: 12px;
@@ -19,10 +19,20 @@ body {
   text-align: center;
   margin: auto;
   min-height: auto;
+  overflow: hidden; /* Cegah elemen keluar dari batas */
 }
 
 /* Responsiveness untuk layar lebih kecil */
 @media screen and (max-width: 768px) {
+  .form-container {
+    max-width: 85%;
+    padding: 12px;
+  }
+
+  input, select {
+    max-width: 95%;
+  }
+
   .App {
     width: 90%;
     padding: 12px;
@@ -54,6 +64,17 @@ body {
 
 /* Responsif untuk layar sangat kecil (mobile) */
 @media screen and (max-width: 480px) {
+
+  .form-container {
+    max-width: 95%;
+    padding: 10px;
+  }
+
+  input, select {
+    font-size: 14px;
+    padding: 8px;
+  }
+
   .App {
     width: 95%;
   }
@@ -73,27 +94,26 @@ body {
 /* Grid untuk layout lebih fleksibel */
 .form-container {
   width: 100%;
-  max-width: 450px; /* Batasi agar tidak terlalu besar */
+  max-width: 90%; /* Sesuaikan agar tidak keluar dari `.App` */
   padding: 15px;
   background: white;
   border-radius: 8px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  align-items: center; /* Pusatkan konten */
+  align-items: center;
   margin: auto;
 }
 
-/* Input dan Dropdown lebih premium */
+/* Pastikan input dan dropdown tetap dalam batas `.App` */
 input, select {
   width: 100%;
-  max-width: 400px; /* Batasi agar tetap dalam background */
+  max-width: 90%; /* Sesuaikan agar tetap dalam batas background */
   padding: 10px;
   border: 2px solid #ccc;
   border-radius: 6px;
   font-size: 16px;
 }
-
 input:focus {
   border-color: #128C7E; /* Warna hijau khas WhatsApp */
   outline: none;
