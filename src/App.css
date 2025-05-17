@@ -11,7 +11,7 @@ body {
 
 /* Pastikan `.App` tetap proporsional */
 .App {
-  width: 100%;
+  width: auto;
   max-width: 600px;
   background: white;
   padding: 20px;
@@ -24,7 +24,7 @@ body {
 }
 /* Grid untuk layout lebih fleksibel */
 .form-container {
-  width: 100%;
+  width: auto;
   max-width: 450px; /* Batasi agar tidak terlalu besar */
   padding: 15px;
   background: white;
@@ -46,7 +46,7 @@ body {
 
 /* Pastikan input dan tombol tidak keluar dari batas container */
 input {
-  width: 100%;
+  width: auto;
   max-width: 400px; /* Batasi agar tetap dalam background */
   padding: 12px;
   border: 2px solid #ccc;
