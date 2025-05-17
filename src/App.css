@@ -451,42 +451,30 @@ button:hover {
   }
 }
 
-/* Responsiveness agar tabel tetap terlihat baik di mobile */
-@media screen and (max-width: 600px) {
-  .history-table th, .history-table td {
-    font-size: 14px;
-    padding: 8px;
-    max-width: 120px;
-  }
-
-  .history-table td:last-child {
-    flex-direction: column; /* Susun tombol secara vertikal jika layar kecil */
-    align-items: center;
-  }
-
-  .edit-button, .delete-button {
-    font-size: 8px; /* Ukuran lebih kecil di layar kecil */
-    padding: 3px 5px;
-  }
-}
-
 /* Responsif untuk layar sangat kecil (mobile) */
+/* Responsiveness untuk HP */
 @media screen and (max-width: 480px) {
-  .App {
-    width: 95%;
-  }
-
   .history-table {
-    font-size: 9px; /* Tambah efisiensi tampilan di layar kecil */
+    max-width: 100%;
   }
 
-  .history-table td:last-child {
-    flex-direction: column; /* Susun tombol secara vertikal */
-    align-items: center;
+  .history-table th, .history-table td {
+    font-size: 9px; /* Ukuran lebih kecil untuk teks */
+    padding: 5px;
   }
 
+  /* Perkecil kolom Nama Customer agar tidak terlalu panjang */
+  .history-table td:nth-child(3), .history-table th:nth-child(3) {
+    max-width: 80px; /* Sesuaikan ukuran */
+    white-space: nowrap; /* Hindari teks berpindah baris */
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Perkecil ukuran tombol Edit dan Hapus */
   .edit-button, .delete-button {
-    font-size: 7px; /* Perkecil ukuran tombol lebih lanjut */
-    padding: 2px 4px;
+    font-size: 8px;
+    padding: 3px 4px;
   }
 }
+
