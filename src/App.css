@@ -1,14 +1,15 @@
 body {
   font-family: 'Inter', sans-serif;
   background: #e5ddd5; /* Warna latar belakang WhatsApp */
-  margin: 20px;
-  padding: 10px;
+  margin: 0;
+  padding: 0;
   display: flex;
   justify-content: center;
   align-items: flex-start; /* Konten dimulai dari atas */
   min-height: 100vh;
 }
 
+/* Pastikan `.App` tetap proporsional */
 .App {
   width: 100%;
   max-width: 600px;
@@ -21,102 +22,59 @@ body {
   min-height: auto;
   overflow: hidden; /* Cegah elemen keluar dari batas */
 }
-
-/* Responsiveness untuk layar lebih kecil */
-@media screen and (max-width: 768px) {
-  .form-container {
-    max-width: 85%;
-    padding: 12px;
-  }
-
-  input, select {
-    max-width: 95%;
-  }
-
-  .App {
-    width: 90%;
-    padding: 12px;
-  }
-
-  .history-table {
-    max-width: 98%;
-  }
-
-  .history-table th, .history-table td {
-    font-size: 10px;
-    padding: 6px;
-  }
-}
-
-/* Responsiveness agar tabel tetap terlihat baik di mobile */
-@media screen and (max-width: 600px) {
-  .history-table th, .history-table td {
-    font-size: 9px;
-    padding: 5px;
-  }
-
-  .edit-button, .delete-button {
-    font-size: 8px;
-    padding: 3px 4px;
-    min-width: 65px;
-  }
-}
-
-/* Responsif untuk layar sangat kecil (mobile) */
-@media screen and (max-width: 480px) {
-
-  .form-container {
-    max-width: 95%;
-    padding: 10px;
-  }
-
-  input, select {
-    font-size: 14px;
-    padding: 8px;
-  }
-
-  .App {
-    width: 95%;
-  }
-
-  .history-table {
-    font-size: 8px;
-  }
-
-  .edit-button, .delete-button {
-    font-size: 7px;
-    padding: 2px 3px;
-    min-width: 60px;
-  }
-}
-
-
 /* Grid untuk layout lebih fleksibel */
 .form-container {
   width: 100%;
-  max-width: 90%; /* Sesuaikan agar tidak keluar dari `.App` */
+  max-width: 450px; /* Batasi agar tidak terlalu besar */
   padding: 15px;
   background: white;
   border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; /* Pusatkan konten */
   margin: auto;
 }
 
-/* Pastikan input dan dropdown tetap dalam batas `.App` */
-input, select {
+/* Style untuk judul "INPUT DATA" agar lebih proporsional */
+.star-wars-title {
+  font-size: 22px; /* Perkecil agar lebih seimbang */
+  font-weight: bold;
+  color: #F4D03F; /* Warna emas khas Star Wars */
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Pastikan input dan tombol tidak keluar dari batas container */
+input {
   width: 100%;
-  max-width: 90%; /* Sesuaikan agar tetap dalam batas background */
-  padding: 10px;
+  max-width: 400px; /* Batasi agar tetap dalam background */
+  padding: 12px;
   border: 2px solid #ccc;
   border-radius: 6px;
   font-size: 16px;
 }
+
 input:focus {
   border-color: #128C7E; /* Warna hijau khas WhatsApp */
   outline: none;
+}
+
+/* Pastikan tombol tidak terlalu besar */
+.save-data {
+  width: 100%;
+  max-width: 300px;
+  padding: 12px;
+  background-color: #28a745;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.save-data:hover {
+  background-color: #218838;
 }
 
 select {
@@ -251,7 +209,6 @@ button:hover {
 }
 
 
-/* Pastikan tombol berada dalam batas background `.App` */
 .history-button {
   text-align: center; /* Pusatkan teks tombol */
   width: 100%;
@@ -280,10 +237,6 @@ button:hover {
   transition: all 0.3s ease-in-out;
 }
 
-/* Efek hover untuk membuat tombol lebih interaktif */
-.history-button button:hover {
-  background-color: #0d6e5f;
-}
 
 /* Agar tabel tetap terlihat baik di mobile */
 @media screen and (max-width: 600px) {
@@ -367,11 +320,11 @@ button:hover {
 
 
 .star-wars-title {
-  font-size: 22px; /* Perkecil agar lebih seimbang */
-  font-weight: bold;
-  color: #F4D03F; /* Warna emas khas Star Wars */
-  text-align: center;
-  margin-bottom: 10px;
+  font-family: 'Staatliches', sans-serif;
+  font-size: 24px;
+  color: #FFD700; /* Warna emas khas Star Wars */
+  text-transform: uppercase;
+  text-shadow: 2px 2px 5px #000;
 }
 
 .App h2, 
@@ -484,7 +437,7 @@ button:hover {
 /* Pastikan tabel lebih proporsional */
 .history-table {
   width: 100%;
-  max-width: 100%; /* Kurangi ukuran tabel agar lebih pas */
+  max-width: 95%; /* Kurangi ukuran tabel agar lebih pas */
   border-collapse: collapse;
   margin-top: 10px;
 }
@@ -513,13 +466,13 @@ button:hover {
 
 /* Perkecil kolom Nama Customer */
 .history-table td:nth-child(3), .history-table th:nth-child(3) {
-  max-width: 100px; /* Kurangi ukuran kolom */
+  max-width: 80px; /* Kurangi ukuran kolom */
   text-align: left;
 }
 
 /* Perkecil ukuran kolom Aksi */
 .history-table td:last-child, .history-table th:last-child {
-  max-width: 100px; /* Sesuaikan ukuran */
+  max-width: 70px; /* Sesuaikan ukuran */
   min-width: 50px; /* Ukuran minimal agar tetap terbaca */
   text-align: center;
 }
@@ -574,3 +527,50 @@ margin-left: 5px;
   background-color: darkred;
 }
 
+/* Responsiveness untuk layar lebih kecil */
+@media screen and (max-width: 768px) {
+  .App {
+    width: 90%;
+    padding: 12px;
+  }
+
+  .history-table {
+    max-width: 98%;
+  }
+
+  .history-table th, .history-table td {
+    font-size: 10px;
+    padding: 6px;
+  }
+}
+
+/* Responsiveness agar tabel tetap terlihat baik di mobile */
+@media screen and (max-width: 600px) {
+  .history-table th, .history-table td {
+    font-size: 9px;
+    padding: 5px;
+  }
+
+  .edit-button, .delete-button {
+    font-size: 8px;
+    padding: 3px 4px;
+    min-width: 65px;
+  }
+}
+
+/* Responsif untuk layar sangat kecil (mobile) */
+@media screen and (max-width: 480px) {
+  .App {
+    width: 95%;
+  }
+
+  .history-table {
+    font-size: 8px;
+  }
+
+  .edit-button, .delete-button {
+    font-size: 7px;
+    padding: 2px 3px;
+    min-width: 60px;
+  }
+}
