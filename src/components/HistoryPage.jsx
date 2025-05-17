@@ -45,38 +45,55 @@ const HistoryPage = ({ currentUser, userRole, onBack }) => {
   );
 
   // Fungsi ekspor data ke Excel
-  const handleExportExcel = async () => {
-    if (filteredData.length === 0) {
-      alert("Tidak ada data untuk diekspor!");
-      return;
-    }
+const handleExportExcel = async () => {
+  if (filteredData.length === 0) {
+    alert("⚠️ Tidak ada data untuk diekspor!");
+    return;
+  }
 
-    const formattedData = filteredData.map(data => ({
-      nomor: data.nomor,
-      tanggal: data.tanggal,
-      customer: data.customer,
-      noInvKw: data.noInvKw,
-      nilaiInvKw: data.nilaiInvKw,
-      userPenginput: data.userPenginput,
-    }));
+  /* Peringatan sebelum ekspor */
+  const confirmExport = window.confirm("⚠️ PROSES EKSPOR AKAN MENGHAPUS SEMUA DATA INPUTAN.\n\nMohon pastikan data sudah sesuai sebelum melanjutkan.\n\nKlik OK untuk ekspor, atau Cancel untuk membatalkan.");
 
-    const workbook = XLSX.utils.book_new();
-    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+  if (!confirmExport) {
+    alert("⛔ Ekspor dibatalkan. Data tetap aman!");
+    return;
+  }
 
-    XLSX.utils.sheet_add_aoa(worksheet, [
-      ["Nomor", "Tanggal", "Customer", "No Inv/Kw", "Nilai Inv/Kw", "User Penginput"]
-    ], { origin: "A1" });
+  /* Konversi data tanpa header otomatis */
+  const formattedData = filteredData.map(data => [
+    data.nomor,
+    data.tanggal,
+    data.customer,
+    data.noInvKw,
+    data.nilaiInvKw,
+    data.userPenginput,
+  ]);
 
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Histori User");
+  /* Membuat workbook dan worksheet */
+  const workbook = XLSX.utils.book_new();
+  const worksheet = XLSX.utils.aoa_to_sheet([ 
+    ["No.", "Tanggal", "Customer", "No. Invoice/Kwitansi", "Nilai Invoice/Kwitansi", "User Input"], 
+    ...formattedData 
+  ]);
 
-    try {
-      XLSX.writeFile(workbook, `Histori_${currentUser}.xlsx`);
-      alert("Data histori berhasil diekspor ke Excel!");
-    } catch (error) {
-      console.error("Error saat ekspor:", error);
-      alert("Gagal mengekspor data.");
-    }
-  };
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Histori User");
+
+  try {
+    XLSX.writeFile(workbook, `Histori_${currentUser}.xlsx`);
+    alert("✅ Data histori berhasil diekspor ke Excel!");
+
+    // Kosongkan histori user setelah ekspor
+    await setDoc(doc(db, "users", currentUser), { data: [] });
+    setHistoryData([]);
+
+    alert("✅ Data histori telah dihapus setelah ekspor.");
+  } catch (error) {
+    console.error("❌ Error saat ekspor:", error);
+    alert("❌ Gagal mengekspor data.");
+  }
+};
+
+
 
   // Fungsi edit dan simpan data
   const handleEditClick = (index) => {
@@ -123,7 +140,7 @@ const HistoryPage = ({ currentUser, userRole, onBack }) => {
                 <th>No Inv/Kw</th> 
                 <th>Nilai Inv/Kw</th> 
                 <th>User Penginput</th> 
-                <th>Aksi</th>
+                <th>Aksi</th> {/* Kolom aksi untuk tombol */}
               </tr> 
             </thead> 
             <tbody> 
