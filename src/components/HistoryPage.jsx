@@ -3,7 +3,7 @@ import * as XLSX from "xlsx";
 import { initializeApp, getApps } from "firebase/app"; 
 import { getFirestore, doc, getDoc, setDoc, updateDoc } from "firebase/firestore"; 
 
-// Konfigurasi Firebase (Pastikan tidak terduplikasi)
+// Konfigurasi Firebase
 const firebaseConfig = { 
   apiKey: "AIzaSyCgkP84T1GqeMBlcnn-f_H1OkF94rUhdZM", 
   authDomain: "react-materai.firebaseapp.com", 
@@ -37,6 +37,48 @@ const HistoryPage = ({ currentUser, userRole, onBack }) => {
     loadHistory(); 
   }, [currentUser, userRole]);
 
+  // Fungsi filter berdasarkan input pengguna
+  const filteredData = historyData.filter(row => 
+    Object.values(row).some(value => 
+      value.toString().toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
+
+  // Fungsi ekspor data ke Excel
+  const handleExportExcel = async () => {
+    if (filteredData.length === 0) {
+      alert("Tidak ada data untuk diekspor!");
+      return;
+    }
+
+    const formattedData = filteredData.map(data => ({
+      nomor: data.nomor,
+      tanggal: data.tanggal,
+      customer: data.customer,
+      noInvKw: data.noInvKw,
+      nilaiInvKw: data.nilaiInvKw,
+      userPenginput: data.userPenginput,
+    }));
+
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+
+    XLSX.utils.sheet_add_aoa(worksheet, [
+      ["Nomor", "Tanggal", "Customer", "No Inv/Kw", "Nilai Inv/Kw", "User Penginput"]
+    ], { origin: "A1" });
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Histori User");
+
+    try {
+      XLSX.writeFile(workbook, `Histori_${currentUser}.xlsx`);
+      alert("Data histori berhasil diekspor ke Excel!");
+    } catch (error) {
+      console.error("Error saat ekspor:", error);
+      alert("Gagal mengekspor data.");
+    }
+  };
+
+  // Fungsi edit dan simpan data
   const handleEditClick = (index) => {
     setEditingIndex(index);
     setEditedData(historyData[index]);
@@ -55,6 +97,7 @@ const HistoryPage = ({ currentUser, userRole, onBack }) => {
     alert("Data berhasil diperbarui!");
   };
 
+  // Fungsi hapus data
   const handleDelete = async (index) => {
     const updatedHistory = historyData.filter((_, i) => i !== index);
 
@@ -68,10 +111,10 @@ const HistoryPage = ({ currentUser, userRole, onBack }) => {
     <div className="history-container"> 
       <h2>Histori Data untuk {currentUser}</h2> 
 
-      {/* Input pencarian */} 
+      {/* Input pencarian */}
       <input type="text" placeholder="Cari data..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="search-input" /> 
 
-      {historyData.length > 0 ? ( 
+      {filteredData.length > 0 ? ( 
         <> 
           <table className="history-table"> 
             <thead> 
@@ -86,7 +129,7 @@ const HistoryPage = ({ currentUser, userRole, onBack }) => {
               </tr> 
             </thead> 
             <tbody> 
-              {historyData.map((data, index) => ( 
+              {filteredData.map((data, index) => ( 
                 <tr key={index}> 
                   <td>{data.nomor}</td> 
                   <td>{data.tanggal}</td> 
@@ -103,6 +146,10 @@ const HistoryPage = ({ currentUser, userRole, onBack }) => {
             </tbody> 
           </table> 
 
+          {/* Tombol Ekspor */}
+          <button className="export-button" onClick={handleExportExcel}>Export ke Excel</button>
+
+          {/* Form Edit */}
           {editingIndex !== null && (
             <div className="edit-form">
               <h3>Edit Data</h3>
@@ -117,6 +164,7 @@ const HistoryPage = ({ currentUser, userRole, onBack }) => {
       ) : ( 
         <p>Tidak ada data histori.</p> 
       )} 
+
       <button className="back-button" onClick={onBack}>Kembali</button> 
     </div> 
   ); 
