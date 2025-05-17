@@ -1,8 +1,7 @@
 body {
   font-family: 'Inter', sans-serif;
   background: #e5ddd5; /* Warna latar belakang WhatsApp */
-  margin: 0;
-  padding: 0;
+  margin: 5px;
   display: flex;
   justify-content: center;
   align-items: flex-start; /* Konten dimulai dari atas */
@@ -172,49 +171,6 @@ button:hover {
 }
 
 
-/* Untuk tampilan HP dengan layar kecil (max-width: 480px) */
-@media screen and (max-width: 480px) {
-  .App {
-    width: 100%;
-    max-width: 360px; /* Sesuaikan agar tidak terlalu lebar */
-    padding: 12px;
-  }
-
-  .form-container {
-    grid-template-columns: 1fr; /* Tetap satu kolom agar nyaman dibaca */
-  }
-
-  input, select {
-    width: 100%; /* Pastikan input dan dropdown memenuhi layar kecil */
-    font-size: 14px;
-    padding: 10px;
-  }
-
-  .dropdown-menu {
-    max-height: 150px; /* Batasi tinggi dropdown agar tidak terlalu panjang */
-    font-size: 14px;
-  }
-
-  button {
-    width: 100%; /* Pastikan tombol memenuhi layar agar mudah diklik */
-    font-size: 14px;
-    padding: 12px;
-  }
-
-.history-table td:nth-child(3), .history-table th:nth-child(3) {
-  max-width: 80px; /* Kurangi ukuran kolom */
-  text-align: left;
-}
-
-/* Perkecil ukuran kolom Aksi */
-.history-table td:last-child, .history-table th:last-child {
-  max-width: 70px; /* Sesuaikan ukuran */
-  min-width: 50px; /* Ukuran minimal agar tetap terbaca */
-  text-align: center;
-}
-
-}
-
 
 .history-button {
   text-align: center; /* Pusatkan teks tombol */
@@ -245,29 +201,10 @@ button:hover {
 }
 
 
-/* Agar tabel tetap terlihat baik di mobile */
-@media screen and (max-width: 600px) {
-.history-table td:nth-child(3), .history-table th:nth-child(3) {
-  max-width: 80px; /* Kurangi ukuran kolom */
-  text-align: left;
-}
-
-/* Perkecil ukuran kolom Aksi */
-.history-table td:last-child, .history-table th:last-child {
-  max-width: 70px; /* Sesuaikan ukuran */
-  min-width: 50px; /* Ukuran minimal agar tetap terbaca */
-  text-align: center;
-}
-
-}
 
 /* Tambahkan jarak untuk tombol */
 .view-data-button {
   margin-top: 20px;
-}
-
-.history-table {
-  margin-bottom: 20px;
 }
 
 .export-button, .back-button {
@@ -541,59 +478,3 @@ margin-left: 5px;
   background-color: darkred;
 }
 
-/* Responsiveness untuk layar lebih kecil */
-@media screen and (max-width: 768px) {
-  .App {
-    width: 90%;
-    padding: 12px;
-  }
-
-  .history-table {
-    max-width: 98%;
-  }
-
-  .history-table th, .history-table td {
-    font-size: 10px;
-    padding: 6px;
-  }
-}
-
-/* Responsiveness agar tabel tetap terlihat baik di mobile */
-@media screen and (max-width: 600px) {
-  .history-table th, .history-table td {
-    font-size: 9px;
-    padding: 5px;
-  }
-
-  .edit-button, .delete-button {
-    font-size: 8px;
-    padding: 3px 4px;
-    min-width: 65px;
-  }
-}
-
-/* Responsif untuk layar sangat kecil (mobile) */
-@media screen and (max-width: 480px) {
-  .App {
-    width: 95%;
-  }
-
-.history-table td:nth-child(3), .history-table th:nth-child(3) {
-  max-width: 80px; /* Kurangi ukuran kolom */
-  text-align: left;
-}
-
-/* Perkecil ukuran kolom Aksi */
-.history-table td:last-child, .history-table th:last-child {
-  max-width: 70px; /* Sesuaikan ukuran */
-  min-width: 50px; /* Ukuran minimal agar tetap terbaca */
-  text-align: center;
-}
-
-
-  .edit-button, .delete-button {
-    font-size: 7px;
-    padding: 2px 3px;
-    min-width: 60px;
-  }
-}
