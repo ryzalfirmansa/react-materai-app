@@ -201,11 +201,18 @@ button:hover {
     padding: 12px;
   }
 
-  .history-table th, .history-table td {
-    font-size: 12px;
-    padding: 8px;
-    word-wrap: break-word;
-  }
+.history-table td:nth-child(3), .history-table th:nth-child(3) {
+  max-width: 80px; /* Kurangi ukuran kolom */
+  text-align: left;
+}
+
+/* Perkecil ukuran kolom Aksi */
+.history-table td:last-child, .history-table th:last-child {
+  max-width: 70px; /* Sesuaikan ukuran */
+  min-width: 50px; /* Ukuran minimal agar tetap terbaca */
+  text-align: center;
+}
+
 }
 
 
@@ -240,11 +247,18 @@ button:hover {
 
 /* Agar tabel tetap terlihat baik di mobile */
 @media screen and (max-width: 600px) {
-  .history-table th, .history-table td {
-    font-size: 14px;
-    padding: 8px;
-    max-width: 120px;
-  }
+.history-table td:nth-child(3), .history-table th:nth-child(3) {
+  max-width: 80px; /* Kurangi ukuran kolom */
+  text-align: left;
+}
+
+/* Perkecil ukuran kolom Aksi */
+.history-table td:last-child, .history-table th:last-child {
+  max-width: 70px; /* Sesuaikan ukuran */
+  min-width: 50px; /* Ukuran minimal agar tetap terbaca */
+  text-align: center;
+}
+
 }
 
 /* Tambahkan jarak untuk tombol */
@@ -564,9 +578,18 @@ margin-left: 5px;
     width: 95%;
   }
 
-  .history-table {
-    font-size: 8px;
-  }
+.history-table td:nth-child(3), .history-table th:nth-child(3) {
+  max-width: 80px; /* Kurangi ukuran kolom */
+  text-align: left;
+}
+
+/* Perkecil ukuran kolom Aksi */
+.history-table td:last-child, .history-table th:last-child {
+  max-width: 70px; /* Sesuaikan ukuran */
+  min-width: 50px; /* Ukuran minimal agar tetap terbaca */
+  text-align: center;
+}
+
 
   .edit-button, .delete-button {
     font-size: 7px;
