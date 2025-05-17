@@ -52,7 +52,7 @@ const handleExportExcel = async () => {
   }
 
   /* Peringatan sebelum ekspor */
-  const confirmExport = window.confirm("⚠️ Penting!\n\nPROSES EXPORT AKAN MENGHAPUS SEMUA DATA INPUTAN.\nMohon pastikan data sudah sesuai.\n\nNote:\NSegera Kirimkan FILE EXCEL ke KASIR.");
+  const confirmExport = window.confirm("⚠️ Penting!\n\nPROSES EXPORT AKAN MENGHAPUS SEMUA DATA INPUTAN.\nMohon pastikan data sudah sesuai.\n\nNote:\nSegera Kirimkan FILE EXCEL ke KASIR.");
 
   if (!confirmExport) {
     alert("⛔ Ekspor dibatalkan. Data tetap aman!");
