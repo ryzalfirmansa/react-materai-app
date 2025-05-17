@@ -11,7 +11,7 @@ body {
 
 .App {
   width: 100%;
-  max-width: 500px;
+  max-width: auto;
   background: white;
   padding: 15px;
   border-radius: 12px;
@@ -136,13 +136,6 @@ button:hover {
   transform: scale(1.02);
 }
 
-/* Responsiveness */
-@media screen and (max-width: 600px) {
-  .App {
-    width: 95%;
-    padding: 20px;
-  }
-}
 
 /* Untuk tampilan HP dengan layar kecil (max-width: 480px) */
 @media screen and (max-width: 480px) {
@@ -188,32 +181,6 @@ button:hover {
   gap: 10px; /* Beri jarak antar tombol */
 }
 
-.history-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-}
-
-.history-table th {
-  background-color: #128C7E; /* Warna header hijau WhatsApp */
-  color: white;
-  font-size: 12px;
-  font-weight: bold;
-  padding: 12px;
-  text-align: center;
-}
-
-.history-table td {
-  font-size: 12px;
-  padding: 10px;
-  text-align: left;
-  border: 1px solid #ddd;
-  background: #fff;
-  word-wrap: break-word;
-  max-width: 150px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 
 /* Agar tabel tetap terlihat baik di mobile */
 @media screen and (max-width: 600px) {
@@ -407,4 +374,99 @@ button:hover {
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
+}
+
+/* Struktur tabel lebih rapi */
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+/* Header tabel */
+.history-table th {
+  background-color: #128C7E; /* Warna hijau khas WhatsApp */
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px;
+  text-align: center;
+}
+
+/* Isi tabel */
+.history-table td {
+  font-size: 12px;
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+  background: #fff;
+  max-width: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; /* Pastikan teks tetap dalam satu baris */
+}
+
+/* Perkecil kolom Nama Customer */
+.history-table td:nth-child(3), .history-table th:nth-child(3) {
+  max-width: 150px; /* Sesuaikan ukuran */
+  white-space: nowrap; /* Hindari teks berpindah baris */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* Pastikan kolom aksi cukup besar untuk tombol */
+.history-table td:last-child {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px; /* Beri jarak antar tombol */
+  min-width: 120px; /* Pastikan cukup ruang untuk tombol */
+}
+
+/* Penyesuaian tombol agar tidak terlalu besar */
+.edit-button, .delete-button {
+  font-size: 11px; /* Sedikit perkecil ukuran teks */
+  padding: 4px 8px; /* Perkecil padding */
+  border-radius: 4px;
+  width: auto; /* Biarkan tombol menyesuaikan teks */
+  text-align: center;
+  display: inline-block;
+  min-width: 70px; /* Pastikan ukurannya tetap proporsional */
+}
+
+/* Warna dan efek tombol edit */
+.edit-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+}
+
+.edit-button:hover {
+  background-color: #218838;
+}
+
+/* Warna dan efek tombol hapus */
+.delete-button {
+  background-color: red;
+  color: white;
+  border: none;
+}
+
+.delete-button:hover {
+  background-color: darkred;
+}
+
+/* Responsiveness agar tabel tetap terlihat baik di mobile */
+@media screen and (max-width: 600px) {
+  .history-table th, .history-table td {
+    font-size: 14px;
+    padding: 8px;
+    max-width: 120px;
+  }
+
+  .history-table td:last-child {
+    flex-direction: column; /* Susun tombol secara vertikal jika layar kecil */
+    align-items: center;
+  }
 }

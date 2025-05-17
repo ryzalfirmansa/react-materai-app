@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react"; 
 import * as XLSX from "xlsx"; 
-import { initializeApp } from "firebase/app"; 
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore"; 
+import { initializeApp, getApps } from "firebase/app"; 
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from "firebase/firestore"; 
 
-// Konfigurasi Firebase
+// Konfigurasi Firebase (Pastikan tidak terduplikasi)
 const firebaseConfig = { 
   apiKey: "AIzaSyCgkP84T1GqeMBlcnn-f_H1OkF94rUhdZM", 
   authDomain: "react-materai.firebaseapp.com", 
@@ -14,144 +14,108 @@ const firebaseConfig = {
   measurementId: "G-M6DESRJWPG" 
 }; 
 
-const app = initializeApp(firebaseConfig); 
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 const db = getFirestore(app); 
 
 const HistoryPage = ({ currentUser, userRole, onBack }) => { 
   const [historyData, setHistoryData] = useState([]); 
   const [searchQuery, setSearchQuery] = useState(""); 
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [editedData, setEditedData] = useState({});
 
   useEffect(() => { 
     const loadHistory = async () => { 
       if (!currentUser) return; 
-      try { 
-        let docRef; 
-        if (userRole === "admin") { 
-          docRef = doc(db, "admin", "data"); 
-        } else { 
-          docRef = doc(db, "users", currentUser); 
-        } 
-        const docSnap = await getDoc(docRef); 
-        if (docSnap.exists()) { 
-          setHistoryData(docSnap.data().data || []); 
-        } else { 
-          setHistoryData([]); 
-        } 
-      } catch (error) { 
-        console.error("Error mengambil data histori:", error); 
+      let docRef = userRole === "admin" ? doc(db, "admin", "data") : doc(db, "users", currentUser);
+      const docSnap = await getDoc(docRef); 
+      if (docSnap.exists()) { 
+        setHistoryData(docSnap.data().data || []); 
+      } else { 
+        setHistoryData([]); 
       } 
     }; 
     loadHistory(); 
-  }, [currentUser, userRole]); 
+  }, [currentUser, userRole]);
 
-  // Format angka agar lebih mudah dibaca
-  const formatAngka = (angka) => { 
-    return Number(angka).toLocaleString("id-ID"); 
-  }; 
+  const handleEditClick = (index) => {
+    setEditingIndex(index);
+    setEditedData(historyData[index]);
+  };
 
-  // Filter berdasarkan pencarian user
-  const filteredData = historyData.filter(row => Object.values(row).some(value => value.toString().toLowerCase().includes(searchQuery.toLowerCase()) ) ); 
+  const handleSaveEdit = async () => {
+    if (editingIndex === null) return;
 
-  const loadAdminHistory = async () => { 
-    const adminRef = doc(db, "admin", "data"); 
-    try { 
-      const adminSnap = await getDoc(adminRef); 
-      if (adminSnap.exists()) { 
-        setHistoryData(adminSnap.data().data || []); 
-        console.log("Histori admin berhasil dimuat."); 
-      } else { 
-        console.warn("Tidak ada histori di admin."); 
-      } 
-    } catch (error) { 
-      console.error("Error mengambil histori admin:", error); 
-    } 
-  }; 
+    const updatedHistory = [...historyData];
+    updatedHistory[editingIndex] = editedData;
 
-const handleExportExcel = async () => {
-  if (filteredData.length === 0) {
-    alert("Tidak ada data untuk diekspor!");
-    return;
-  }
+    await updateDoc(doc(db, "users", currentUser), { data: updatedHistory });
 
-  // Buat array dengan urutan kolom yang benar
-  const formattedData = filteredData.map(data => ({
-    nomor: data.nomor,
-    tanggal: data.tanggal,
-    customer: data.customer,
-    noInvKw: data.noInvKw,
-    nilaiInvKw: data.nilaiInvKw,
-    userPenginput: data.userPenginput,
-  }));
+    setHistoryData(updatedHistory);
+    setEditingIndex(null);
+    alert("Data berhasil diperbarui!");
+  };
 
-  console.log("Data yang akan diekspor:", formattedData); // Cek apakah urutan sudah benar
+  const handleDelete = async (index) => {
+    const updatedHistory = historyData.filter((_, i) => i !== index);
 
-  const workbook = XLSX.utils.book_new();
-  const worksheet = XLSX.utils.json_to_sheet(formattedData);
+    await setDoc(doc(db, "users", currentUser), { data: updatedHistory });
 
-  // Set judul kolom sesuai urutan yang diinginkan
-  XLSX.utils.sheet_add_aoa(worksheet, [
-    ["Nomor", "Tanggal", "Customer", "No Inv/Kw", "Nilai Inv/Kw", "User Penginput"]
-  ], { origin: "A1" });
-
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Histori User");
-
-  try {
-    XLSX.writeFile(workbook, `Histori_${currentUser}.xlsx`);
-    alert("Data histori berhasil diekspor ke Excel!");
-
-    // Hapus histori user dari Firestore
-    const docRef = doc(db, "users", currentUser);
-    await setDoc(docRef, { data: [] });
-
-    // Kosongkan histori dari tampilan
-    setHistoryData([]);
-    
-    alert("Data histori telah dihapus setelah ekspor.");
-  } catch (error) {
-    console.error("Error saat ekspor:", error);
-    alert("Gagal mengekspor data.");
-  }
-};
-
-
+    setHistoryData(updatedHistory);
+    alert("Data berhasil dihapus!");
+  };
 
   return ( 
     <div className="history-container"> 
       <h2>Histori Data untuk {currentUser}</h2> 
 
       {/* Input pencarian */} 
-      <input type="text" placeholder="Cari data dalam histori..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="search-input" /> 
+      <input type="text" placeholder="Cari data..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="search-input" /> 
 
-      {filteredData.length > 0 ? ( 
+      {historyData.length > 0 ? ( 
         <> 
           <table className="history-table"> 
             <thead> 
               <tr> 
-                <th>Nomor</th> 
+                <th>No</th> 
                 <th>Tanggal</th> 
                 <th>Nama Customer</th> 
                 <th>No Inv/Kw</th> 
                 <th>Nilai Inv/Kw</th> 
                 <th>User Penginput</th> 
+                <th>Aksi</th> {/* Kolom aksi untuk tombol */}
               </tr> 
             </thead> 
             <tbody> 
-              {filteredData.map((data, index) => ( 
+              {historyData.map((data, index) => ( 
                 <tr key={index}> 
                   <td>{data.nomor}</td> 
                   <td>{data.tanggal}</td> 
                   <td>{data.customer}</td> 
                   <td>{data.noInvKw}</td> 
-                  <td>{formatAngka(data.nilaiInvKw)}</td> 
+                  <td>{data.nilaiInvKw}</td> 
                   <td>{data.userPenginput}</td> 
+                  <td>
+                    <button onClick={() => handleEditClick(index)} className="edit-button">Edit</button>
+                    <button onClick={() => handleDelete(index)} className="delete-button">Hapus</button>
+                  </td>
                 </tr> 
               ))} 
             </tbody> 
           </table> 
-          <button className="export-button" onClick={handleExportExcel}>Export ke Excel</button> 
-        </> 
+
+          {editingIndex !== null && (
+            <div className="edit-form">
+              <h3>Edit Data</h3>
+              <input type="text" value={editedData.customer} onChange={(e) => setEditedData({ ...editedData, customer: e.target.value })} />
+              <input type="text" value={editedData.noInvKw} onChange={(e) => setEditedData({ ...editedData, noInvKw: e.target.value })} />
+              <input type="number" value={editedData.nilaiInvKw} onChange={(e) => setEditedData({ ...editedData, nilaiInvKw: e.target.value })} />
+              <button onClick={handleSaveEdit} className="save-edit-button">Simpan</button>
+              <button onClick={() => setEditingIndex(null)} className="cancel-edit-button">Batal</button>
+            </div>
+          )}
+        </>
       ) : ( 
-        <p>Tidak ada data histori yang sesuai dengan pencarian.</p> 
+        <p>Tidak ada data histori.</p> 
       )} 
       <button className="back-button" onClick={onBack}>Kembali</button> 
     </div> 
