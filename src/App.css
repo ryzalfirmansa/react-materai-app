@@ -488,21 +488,21 @@ margin-left: 5px;
 /* 📌 Untuk layar HP sangat kecil (max-width: 480px) */
 @media screen and (max-width: 480px) {
   .history-table {
-    width: 90%;
-    max-width: 90%;
+    width: 95%;
+    max-width: 80%; /* Kurangi lebih jauh ukuran tabel */
     border-collapse: collapse;
-    margin-top: 8px;
+    margin-top: 6px;
   }
 
   /* Header tabel */
   .history-table th {
-    font-size: 8px; /* Perkecil ukuran font */
-    padding: 4px;
+    font-size: 8px; /* Perkecil font lagi */
+    padding: 5px;
   }
 
   /* Isi tabel */
   .history-table td {
-    font-size: 8px; /* Perkecil ukuran teks */
+    font-size: 8px;
     padding: 4px;
     white-space: nowrap;
     overflow: hidden;
@@ -511,27 +511,25 @@ margin-left: 5px;
 
   /* Kolom Nama Customer lebih kecil */
   .history-table td:nth-child(3), .history-table th:nth-child(3) {
-    max-width: 70px; /* Kurangi ukuran agar sesuai dengan layar kecil */
+    max-width: 55px; /* Pastikan lebih kecil agar sesuai layar HP */
     text-align: left;
   }
 
   /* Kolom Aksi lebih proporsional */
   .history-table td:last-child, .history-table th:last-child {
-    max-width: 60px;
-    min-width: 45px;
+    max-width: 50px;
+    min-width: 40px;
     text-align: center;
   }
 
-  /* Tata letak tombol tetap tersusun secara vertikal */
+  /* Tata letak tombol tetap vertikal */
   .history-table td:last-child {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 4px;
+    gap: 2px; /* Kurangi jarak agar tombol tetap terlihat */
   }
-}
-
 
   input, select {
     width: 100%; /* Pastikan input dan dropdown memenuhi layar kecil */
