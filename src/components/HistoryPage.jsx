@@ -52,7 +52,7 @@ const handleExportExcel = async () => {
   }
 
   /* Peringatan sebelum ekspor */
-  const confirmExport = window.confirm("⚠️ PROSES EKSPOR AKAN MENGHAPUS SEMUA DATA INPUTAN.\n\nMohon pastikan data sudah sesuai sebelum melanjutkan.\n\nKlik OK untuk ekspor, atau Cancel untuk membatalkan.");
+  const confirmExport = window.confirm("⚠️ Penting!\n\nPROSES EXPORT AKAN MENGHAPUS SEMUA DATA INPUTAN.\nMohon pastikan data sudah sesuai.\n\nNote:\NSegera Kirimkan FILE EXCEL ke KASIR.");
 
   if (!confirmExport) {
     alert("⛔ Ekspor dibatalkan. Data tetap aman!");
@@ -76,19 +76,19 @@ const handleExportExcel = async () => {
     ...formattedData 
   ]);
 
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Histori User");
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Inputan User");
 
   try {
-    XLSX.writeFile(workbook, `Histori_${currentUser}.xlsx`);
-    alert("✅ Data histori berhasil diekspor ke Excel!");
+    XLSX.writeFile(workbook, `Export_Materai_${currentUser}.xlsx`);
+    alert("✅ Data inputan berhasil diekspor ke Excel!");
 
     // Kosongkan histori user setelah ekspor
     await setDoc(doc(db, "users", currentUser), { data: [] });
     setHistoryData([]);
 
-    alert("✅ Data histori telah dihapus setelah ekspor.");
+    alert("✅ Data inputan berhasil dihapus.");
   } catch (error) {
-    console.error("❌ Error saat ekspor:", error);
+    console.error("❌ Export Error:", error);
     alert("❌ Gagal mengekspor data.");
   }
 };
@@ -171,7 +171,7 @@ const handleExportExcel = async () => {
           )}
         </>
       ) : ( 
-        <p>Tidak ada data histori.</p> 
+        <p>Tidak ada data inputan.</p> 
       )} 
           {/* Tombol Ekspor */}
           <button className="export-button" onClick={handleExportExcel}>Export ke Excel</button>
