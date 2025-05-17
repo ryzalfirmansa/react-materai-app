@@ -98,6 +98,15 @@ const handleExportExcel = async () => {
   try {
     XLSX.writeFile(workbook, `Histori_${currentUser}.xlsx`);
     alert("Data histori berhasil diekspor ke Excel!");
+
+    // Hapus histori user dari Firestore
+    const docRef = doc(db, "users", currentUser);
+    await setDoc(docRef, { data: [] });
+
+    // Kosongkan histori dari tampilan
+    setHistoryData([]);
+    
+    alert("Data histori telah dihapus setelah ekspor.");
   } catch (error) {
     console.error("Error saat ekspor:", error);
     alert("Gagal mengekspor data.");
