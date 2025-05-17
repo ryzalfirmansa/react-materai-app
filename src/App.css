@@ -95,6 +95,12 @@ select:focus {
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
 }
 
+  input, select {
+    width: 100%; /* Pastikan input dan dropdown memenuhi layar kecil */
+    font-size: 14px;
+    padding: 10px;
+  }
+
 /* Style untuk opsi */
 option {
   margin-top: 10px;
@@ -395,9 +401,9 @@ button:hover {
 /* Pastikan tabel lebih proporsional */
 .history-table {
   width: 100%;
-  max-width: 95%; /* Kurangi ukuran tabel agar lebih pas */
+  max-width: 100%; /* Kurangi ukuran tabel agar lebih pas */
   border-collapse: collapse;
-  margin-top: 10px;
+  margin: 10px auto;
 }
 
 /* Header tabel */
@@ -425,12 +431,12 @@ button:hover {
 /* Perkecil kolom Nama Customer */
 .history-table td:nth-child(3), .history-table th:nth-child(3) {
   max-width: 80px; /* Kurangi ukuran kolom */
-  text-align: left;
+  text-align: center;
 }
 
 /* Perkecil ukuran kolom Aksi */
 .history-table td:last-child, .history-table th:last-child {
-  max-width: 70px; /* Sesuaikan ukuran */
+  max-width: 60px; /* Sesuaikan ukuran */
   min-width: 50px; /* Ukuran minimal agar tetap terbaca */
   text-align: center;
 }
@@ -488,10 +494,11 @@ margin-left: 5px;
 /* 📌 Untuk layar HP sangat kecil (max-width: 480px) */
 @media screen and (max-width: 480px) {
   .history-table {
-    width: 95%;
-    max-width: 80%; /* Kurangi lebih jauh ukuran tabel */
+    justify-content: center;
+    width: 90%;
+    max-width: 90%; /* Kurangi lebih jauh ukuran tabel */
     border-collapse: collapse;
-    margin-top: 6px;
+    margin: 6px auto;
   }
 
   /* Header tabel */
@@ -512,7 +519,7 @@ margin-left: 5px;
   /* Kolom Nama Customer lebih kecil */
   .history-table td:nth-child(3), .history-table th:nth-child(3) {
     max-width: 55px; /* Pastikan lebih kecil agar sesuai layar HP */
-    text-align: left;
+    text-align: center;
   }
 
   /* Kolom Aksi lebih proporsional */
