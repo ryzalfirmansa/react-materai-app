@@ -11,7 +11,7 @@ body {
 
 .App {
   width: 100%;
-  max-width: auto;
+  max-width: 500px;
   background: white;
   padding: 15px;
   border-radius: 12px;
@@ -376,9 +376,11 @@ button:hover {
   font-size: 16px;
 }
 
-/* Struktur tabel lebih rapi */
+
+/* Pastikan tabel histori mengikuti ukuran .App */
 .history-table {
   width: 100%;
+  max-width: 500px; /* Sesuaikan dengan ukuran .App */
   border-collapse: collapse;
   margin-top: 15px;
 }
@@ -400,61 +402,63 @@ button:hover {
   text-align: left;
   border: 1px solid #ddd;
   background: #fff;
-  max-width: auto;
+  white-space: nowrap; /* Pastikan teks tetap dalam satu baris */
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap; /* Pastikan teks tetap dalam satu baris */
 }
 
-/* Perkecil kolom Nama Customer */
+/* Perkecil ukuran kolom Nama Customer */
 .history-table td:nth-child(3), .history-table th:nth-child(3) {
-  max-width: 150px; /* Sesuaikan ukuran */
+  max-width: 100px; /* Sesuaikan ukuran */
   white-space: nowrap; /* Hindari teks berpindah baris */
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-
-/* Pastikan kolom aksi cukup besar untuk tombol */
-.history-table td:last-child {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 6px; /* Beri jarak antar tombol */
-  min-width: 120px; /* Pastikan cukup ruang untuk tombol */
+/* Perkecil ukuran kolom Aksi */
+.history-table td:last-child, .history-table th:last-child {
+  max-width: 80px; /* Sesuaikan ukuran */
+  min-width: 60px; /* Ukuran minimal agar tetap terbaca */
+  text-align: center;
 }
 
-/* Penyesuaian tombol agar tidak terlalu besar */
+/* Perkecil ukuran tombol Edit dan Hapus */
 .edit-button, .delete-button {
-  font-size: 11px; /* Sedikit perkecil ukuran teks */
-  padding: 4px 8px; /* Perkecil padding */
-  border-radius: 4px;
-  width: auto; /* Biarkan tombol menyesuaikan teks */
+  font-size: 9px; /* Kurangi ukuran teks */
+  padding: 3px 5px; /* Perkecil padding tombol */
+  border-radius: 3px; /* Kurangi sudut tombol */
+  width: auto; /* Biarkan tombol menyesuaikan ukuran teks */
   text-align: center;
   display: inline-block;
-  min-width: 70px; /* Pastikan ukurannya tetap proporsional */
+  min-width: 50px; /* Ukuran minimal agar tetap proporsional */
 }
 
-/* Warna dan efek tombol edit */
-.edit-button {
-  background-color: #28a745;
-  color: white;
-  border: none;
+/* Pastikan tombol tetap sejajar dalam kolom aksi */
+.history-table td:last-child {
+  display: flex;
+  flex-direction: column; /* Susun tombol secara vertikal */
+  justify-content: center;
+  align-items: center;
+  gap: 3px; /* Kurangi jarak antar tombol */
 }
 
-.edit-button:hover {
-  background-color: #218838;
-}
 
-/* Warna dan efek tombol hapus */
-.delete-button {
-  background-color: red;
-  color: white;
-  border: none;
-}
+/* Responsiveness untuk layar lebih kecil */
+@media screen and (max-width: 768px) {
+  .App {
+    width: 90%; /* Sesuaikan ukuran aplikasi */
+    padding: 15px;
+  }
 
-.delete-button:hover {
-  background-color: darkred;
+  .history-table {
+    max-width: 100%; /* Sesuaikan ukuran tabel */
+  }
+
+  .history-table th, .history-table td {
+    font-size: 10px; /* Perkecil font di layar kecil */
+    padding: 6px;
+    max-width: 100px;
+  }
 }
 
 /* Responsiveness agar tabel tetap terlihat baik di mobile */
@@ -467,6 +471,22 @@ button:hover {
 
   .history-table td:last-child {
     flex-direction: column; /* Susun tombol secara vertikal jika layar kecil */
+    align-items: center;
+  }
+}
+
+/* Responsif untuk layar sangat kecil (mobile) */
+@media screen and (max-width: 480px) {
+  .App {
+    width: 95%;
+  }
+
+  .history-table {
+    font-size: 9px; /* Tambah efisiensi tampilan di layar kecil */
+  }
+
+  .history-table td:last-child {
+    flex-direction: column; /* Susun tombol secara vertikal */
     align-items: center;
   }
 }
